@@ -5,7 +5,7 @@
 
 clone repository:
 ```
-git clone https://gitlab.com/MarkBorodin/pdf_generator.git
+git clone https://github.com/MarkBorodin/pdf_generator.git
 ```
 move to folder "testify":
 ```

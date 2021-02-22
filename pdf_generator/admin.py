@@ -17,15 +17,24 @@ class DesignationsInline(admin.TabularInline):
 class OfferAdmin(admin.ModelAdmin):
     inlines = (DesignationsInline,)
     list_display = (
-        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description', 'get_pdf'
+        'number', 'create_date', 'client_address', 'client_name',
+        'client_address', 'email', 'description', 'view_pdf', 'get_pdf'
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
     fields = ('client_address', 'client_name', 'email', 'description')
 
+    @staticmethod
     def get_pdf(self, obj):
         return mark_safe(
             f'<a class="button" href="{reverse("pdf_generator:get_pdf_offer", args=[obj.pk])}">Get PDF</a>'
+        )
+
+    @staticmethod
+    def view_pdf(self, obj):
+        return mark_safe(
+            f'<a target="_blank" class="button" '
+            f'href="{reverse("pdf_generator:view_pdf_offer", args=[obj.pk])}">View PDF</a>'
         )
 
 

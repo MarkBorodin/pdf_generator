@@ -18,6 +18,9 @@ class Offer(BaseModel):
     email = models.EmailField(null=True)
     description = models.TextField(max_length=512, null=True)
 
+    class Meta:
+        ordering = ["-create_date"]
+
     def save(self, *args, **kwargs):
         if self.number is None:
             self.number = \
