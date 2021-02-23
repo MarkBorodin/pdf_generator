@@ -116,3 +116,4 @@ STATICFILES_DIRS = [
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+WKHTMLTOPDF_CMD = 'wkhtmltopdf'
