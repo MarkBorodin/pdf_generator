@@ -13,13 +13,16 @@ class BaseModel(models.Model):
 
 class Offer(BaseModel):
     number = models.IntegerField(primary_key=True)
-    client_address = models.TextField(max_length=512, null=True)
-    client_name = models.TextField(max_length=128, null=True)
+    client_address = models.CharField(max_length=512, null=True)
+    client_name = models.CharField(max_length=128, null=True)
     email = models.EmailField(null=True)
-    description = models.TextField(max_length=512, null=True)
+    description = models.CharField(max_length=512, null=True)
 
     class Meta:
         ordering = ["-create_date"]
+
+    def __str__(self):
+        return f'{self.number}'
 
     def save(self, *args, **kwargs):
         if self.number is None:
@@ -28,10 +31,9 @@ class Offer(BaseModel):
                 + str(datetime.datetime.now().month)\
                 + str(datetime.datetime.now().hour)\
                 + str(datetime.datetime.now().minute)
+            if len(self.number) == 8:
+                self.number += '0'
         super(self.__class__, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return f'{self.number}'
 
     def get_netto_price(self):
         designations = Designation.objects.filter(offer=self.number)
@@ -49,8 +51,8 @@ class Offer(BaseModel):
 
 class Designation(BaseModel):
     offer = models.ForeignKey(to=Offer, related_name='designations', on_delete=models.CASCADE, null=False, blank=False)
-    name = models.TextField(max_length=512, null=True)
-    description = models.TextField(max_length=512, null=True)
+    name = models.CharField(max_length=512, null=True)
+    description = models.CharField(max_length=512, null=True)
     price = models.IntegerField(null=False, blank=False, default=0)
     quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 

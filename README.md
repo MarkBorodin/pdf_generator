@@ -1,4 +1,4 @@
-# INSTALL_TESTIFY 
+# INSTALL_APP
 
 
 ### Setup
@@ -7,7 +7,7 @@ clone repository:
 ```
 git clone https://github.com/MarkBorodin/pdf_generator.git
 ```
-move to folder "testify":
+move to folder "pdf_generator":
 ```
 cd pdf_generator
 ```

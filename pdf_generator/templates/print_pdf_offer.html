@@ -20,7 +20,7 @@ body {
 #page_1 #id1_2 {
 position: absolute;
   left: 71px;
-  bottom: 690px;
+  bottom: 680px;
   width: 100%;
   height: 80px;
   border:none;
@@ -119,7 +119,12 @@ position: absolute;
 .td21{border-bottom: #431e75 1px solid;padding: 0px;margin: 0px;width: 74px;vertical-align: bottom;}
 .td22{border-bottom: #431e75 1px solid;padding: 0px;margin: 0px;width: 84px;vertical-align: bottom;}
 .td23{border-bottom: #431e75 1px solid;padding: 0px;margin: 0px;width: 102px;vertical-align: bottom;}
-.td24{padding: padding: 0px;word-wrap: break-word; max-width: 50px;}
+.td24{
+width: 70px;
+max-width: 70px;
+white-space: nowrap;
+overflow: hidden;
+}
 .td25{border-bottom: #431e75 1px solid;padding: 0px;margin: 0px;width: 67px;vertical-align: bottom;}
 .td26{border-bottom: #431e75 1px solid;padding: 0px;margin: 0px;width: 230px;vertical-align: bottom;}
 .td27{border-bottom: #d1d3d4 1px solid;padding: 0px;margin: 0px;width: 117px;vertical-align: bottom;}
@@ -354,9 +359,6 @@ position: absolute;
 	<TD class="tr17 td22"><P class="p2 ft18">&nbsp;</P></TD>
 	<TD class="tr17 td23"><P class="p2 ft18">&nbsp;</P></TD>
 </TR>
-
-
-
 
 
 {% for item in items %}
