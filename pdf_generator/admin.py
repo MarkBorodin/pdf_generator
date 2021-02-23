@@ -1,8 +1,10 @@
 from django.contrib import admin
+from django.db import models
+from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.db import models
-from django.forms import Textarea, EmailField
+
+
 from pdf_generator.forms import DesignationInlineFormSet
 from pdf_generator.models import Designation, Offer
 
