@@ -23,7 +23,7 @@ class DesignationsInline(admin.TabularInline):
 class OfferAdmin(admin.ModelAdmin):
     inlines = (DesignationsInline,)
     list_display = (
-        'number', 'create_date', 'client_name', 'client_address', 'email', 'description', 'view_pdf', 'get_pdf'
+        'number', 'create_date', 'client_name', 'client_address', 'email', 'description', 'view_pdf', 'get_pdf', 'view_pdf_invoice',
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
@@ -42,6 +42,12 @@ class OfferAdmin(admin.ModelAdmin):
         return mark_safe(
             f'<a target="_blank" class="button" '
             f'href="{reverse("pdf_generator:view_pdf_offer", args=[obj.pk])}">View PDF</a>'
+        )
+
+    def view_pdf_invoice(self, obj): # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button" '
+            f'href="{reverse("pdf_generator:view_pdf_invoice", args=[obj.pk])}">View PDF invoice</a>'
         )
 
 
