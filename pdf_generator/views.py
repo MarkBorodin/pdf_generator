@@ -14,6 +14,14 @@ def offer(request):
     )
 
 
+def invoice(request):
+    """invoice blank template"""
+    return render(
+        request=request,
+        template_name='main_invoice.html',
+    )
+
+
 class ViewPDFoffer(TemplateView):
     """view pdf file"""
     template_name = 'main_offer.html'

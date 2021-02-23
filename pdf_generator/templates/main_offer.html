@@ -178,7 +178,7 @@ overflow: hidden;
 
 <DIV class="dclr"></DIV>
 <DIV id="id1_1">
-<P class="p0 ft0">OFFER</P>
+<P class="p0 ft0">OFFERTE</P>
 <TABLE cellpadding=0 cellspacing=0 class="t0">
 <TR>
 	<TD class="tr0 td0"><P class="p1 ft1">Nr.</P></TD>
@@ -192,7 +192,7 @@ overflow: hidden;
 <TR>
 	<TD class="tr1 td0"><P class="p1 ft1">Datum</P></TD>
 	<TD class="tr1 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.year }}.{{ offer.create_date.month }}.{{ offer.create_date.day }}</P></TD>
+	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}.{{ offer.create_date|date:"F"|slice:3 }}.{{ offer.create_date.year }}</P></TD>
 	<TD class="tr1 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td4"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td5"><P class="p2 ft2">&nbsp;</P></TD>

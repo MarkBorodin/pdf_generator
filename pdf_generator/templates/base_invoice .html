@@ -20,7 +20,7 @@ body {
 #page_1 #id1_2 {
 position: absolute;
   left: 71px;
-  bottom: 680px;
+  bottom: 80px;
   width: 100%;
   height: 80px;
   border:none;
@@ -31,7 +31,7 @@ position: absolute;
 #page_1 #id1_3 {
 position: absolute;
   left: 71px;
-  bottom: 520px;
+  bottom: -70px;
   width: 100%;
   height: 80px;
   border:none;
@@ -178,7 +178,7 @@ overflow: hidden;
 
 <DIV class="dclr"></DIV>
 <DIV id="id1_1">
-<P class="p0 ft0">OFFERTE</P>
+<P class="p0 ft0">INVOICE</P>
 <TABLE cellpadding=0 cellspacing=0 class="t0">
 <TR>
 	<TD class="tr0 td0"><P class="p1 ft1">Nr.</P></TD>
@@ -192,7 +192,7 @@ overflow: hidden;
 <TR>
 	<TD class="tr1 td0"><P class="p1 ft1">Datum</P></TD>
 	<TD class="tr1 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}.{{ offer.create_date|date:"F"|slice:3 }}.{{ offer.create_date.year }}</P></TD>
+	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.year }}.{{ offer.create_date.month }}.{{ offer.create_date.day }}</P></TD>
 	<TD class="tr1 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td4"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td5"><P class="p2 ft2">&nbsp;</P></TD>
@@ -331,6 +331,26 @@ overflow: hidden;
 	<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
 	<TD class="tr12 td16"><P class="p2 ft13">&nbsp;</P></TD>
 </TR>
+	<TR>
+	<TD class="tr6 td0"><P class="p2 ft2">&nbsp;</P></TD>
+	<TD class="tr6 td1"><P class="p2 ft2">&nbsp;</P></TD>
+	<TD class="tr6 td2"><P class="p2 ft2">&nbsp;</P></TD>
+	<TD class="tr6 td3"><P class="p2 ft2">&nbsp;</P></TD>
+	<TD class="tr6 td4"><P class="p6 ft14">Rechnungsbetrag</P></TD>
+	<TD class="tr6 td5"><P class="p2 ft2">&nbsp;</P></TD>
+	<TD class="tr6 td15"><P class="p8 ft6">CHF 5’310.00</P></TD>
+	<TD class="tr6 td16"><P class="p2 ft2">&nbsp;</P></TD>
+</TR>
+<TR>
+	<TD class="tr5 td0"><P class="p2 ft8">&nbsp;</P></TD>
+	<TD class="tr5 td1"><P class="p2 ft8">&nbsp;</P></TD>
+	<TD class="tr5 td2"><P class="p2 ft8">&nbsp;</P></TD>
+	<TD class="tr5 td3"><P class="p2 ft8">&nbsp;</P></TD>
+	<TD class="tr5 td4"><P class="p6 ft5">Zahlbar bis</P></TD>
+	<TD class="tr5 td5"><P class="p2 ft8">&nbsp;</P></TD>
+	<TD class="tr5 td15"><P class="p8 ft6">22.02.2021</P></TD>
+	<TD class="tr5 td16"><P class="p2 ft8">&nbsp;</P></TD>
+</TR>
 <TR>
 	<TD class="tr16 td17"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD colspan=2 class="tr16 td18"><P class="p2 ft2">&nbsp;</P></TD>
@@ -365,7 +385,7 @@ overflow: hidden;
 	<TR>
 		<TD rowspan=2 class="tr18 td0"><P class="p9 ft19">{{ item.1 }}</P></TD>
 		<TD class="tr2 td1"><P class="p2 ft20">{{ item.0.name }}</P></TD>
-		<TD class="tr2 td2"><P class="p2 ft2">&nbsp</P></TD>
+		<TD class="tr2 td2"><P class="p2 ft2">&nbsp;</P></TD>
 		<TD rowspan=2 class="tr18 td3"><P class="p2 ft19">CHF</P></TD>
 		<TD rowspan=2 class="tr18 td4"><P class="p10 ft19">{{ item.0.price }}</P></TD>
 		<TD rowspan=2 class="tr18 td5"><P class="p13 ft19">{{ item.0.quantity }}</P></TD>

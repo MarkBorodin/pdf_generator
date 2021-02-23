@@ -13,10 +13,10 @@ class BaseModel(models.Model):
 
 class Offer(BaseModel):
     number = models.IntegerField(primary_key=True)
-    client_address = models.CharField(max_length=512, null=True)
-    client_name = models.CharField(max_length=128, null=True)
+    client_address = models.TextField(max_length=512, null=True)
+    client_name = models.TextField(max_length=128, null=True)
     email = models.EmailField(null=True)
-    description = models.CharField(max_length=512, null=True)
+    description = models.TextField(max_length=512, null=True)
 
     class Meta:
         ordering = ["-create_date"]
@@ -51,9 +51,9 @@ class Offer(BaseModel):
 
 class Designation(BaseModel):
     offer = models.ForeignKey(to=Offer, related_name='designations', on_delete=models.CASCADE, null=False, blank=False)
-    name = models.CharField(max_length=512, null=True)
-    description = models.CharField(max_length=512, null=True)
-    price = models.IntegerField(null=False, blank=False, default=0)
+    name = models.TextField(max_length=512, null=True)
+    description = models.TextField(max_length=512, null=True)
+    price = models.FloatField(null=False, blank=False, default=0)
     quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 
     def __str__(self):
