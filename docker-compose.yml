@@ -8,3 +8,17 @@ services:
       - .:/code
     ports:
       - 8020:8000
+  nginx:
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static_content:/var/www/pdf_generator
+    ports:
+      - 80:80
+      - 444:443
+    depends_on:
+      - web
+
+volumes:
+  pgdata: {}
+  static_content: {}
