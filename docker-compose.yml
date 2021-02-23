@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  web:
+  backend:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -17,7 +17,7 @@ services:
       - 80:80
       - 444:443
     depends_on:
-      - web
+      - backend
 
 volumes:
   pgdata: {}
