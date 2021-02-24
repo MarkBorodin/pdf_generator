@@ -6,6 +6,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
+      - static_content:/var/www/pdf_generator
     ports:
       - 8020:8000
   nginx:
