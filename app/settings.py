@@ -14,7 +14,7 @@ SECRET_KEY = '7c+ocjtn$oti8((y)7jv-)ij2-3a%_avo37f=i$i7x^x3cd%lg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = '192.168.88.228:*'
+ALLOWED_HOSTS = ['pdf-generat.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -117,7 +117,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
 WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
 
 
