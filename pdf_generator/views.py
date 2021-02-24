@@ -94,7 +94,7 @@ class ViewPDFinvoice(TemplateView):
 
 class GetPDFinvoice(PDFTemplateView):
     """get pdf invoice file"""
-    filename = 'my_pdf.pdf'
+    # filename = 'my_pdf.pdf'
     template_name = 'print_pdf_invoice.html'
     name = 'pdf'
     pk_url_kwarg = 'id'
@@ -113,4 +113,6 @@ class GetPDFinvoice(PDFTemplateView):
         context['items'] = list()
         for designation, num in zip(context['designations'], context['num_designations']):
             context['items'].append((designation, num))
+
+        self.filename = 'Offerte_' + str(offer_number) + '.pdf'
         return context
