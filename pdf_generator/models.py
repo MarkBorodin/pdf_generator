@@ -38,14 +38,17 @@ class Offer(BaseModel):
     def get_netto_price(self):
         designations = Designation.objects.filter(offer=self.number)
         self.netto_price = sum([designation.price * designation.quantity for designation in designations])
+        self.netto_price = float('{:.1f}'.format(self.netto_price))
         return self.netto_price
 
     def get_mwst(self):
         self.mwst = (self.netto_price * 7.7)/100
+        self.mwst = float('{:.1f}'.format(self.mwst))
         return self.mwst
 
     def get_invoice_amount_total(self):
         self.invoice_amount_total = self.netto_price + self.mwst
+        self.invoice_amount_total = float('{:.1f}'.format(self.invoice_amount_total))
         return self.invoice_amount_total
 
 
