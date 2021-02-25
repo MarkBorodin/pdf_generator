@@ -66,6 +66,7 @@ class GetPDFoffer(PDFTemplateView):
         context['items'] = list()
         for designation, num in zip(context['designations'], context['num_designations']):
             context['items'].append((designation, num))
+        self.filename = 'Offerte_' + str(offer_number) + '.pdf'
         return context
 
 
@@ -113,6 +114,5 @@ class GetPDFinvoice(PDFTemplateView):
         context['items'] = list()
         for designation, num in zip(context['designations'], context['num_designations']):
             context['items'].append((designation, num))
-
-        self.filename = 'Offerte_' + str(offer_number) + '.pdf'
+        self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
         return context
