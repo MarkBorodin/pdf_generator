@@ -44,4 +44,20 @@ http://127.0.0.1:8000/admin
 ```
 
 
+### or you can run this in docker
+
+run:
+
+```
+docker-compose up --build
+docker-compose exec backend python manage.py migrate
+docker-compose exec backend python manage.py createsuperuser
+docker-compose exec backend python manage.py collectstatic
+```
+
+follow the link:
+```
+http://127.0.0.1/admin/
+```
+
 ### Finish
