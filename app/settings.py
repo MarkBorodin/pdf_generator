@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '7c+ocjtn$oti8((y)7jv-)ij2-3a%_avo37f=i$i7x^x3cd%lg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['pdf-generat.herokuapp.com', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
