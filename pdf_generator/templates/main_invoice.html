@@ -87,6 +87,7 @@ position: absolute;
 .p5{text-align: left;padding-left: 70px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p6{text-align: left;padding-left: 19px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 9px;white-space: nowrap;}
 .p8{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p9{text-align: left;padding-left: 71px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p10{text-align: right;padding-right: 38px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
@@ -256,7 +257,7 @@ position: absolute;
 <TR>
 	<TD class="tr0 td0"><P class="p5 ft5"><NOBR>E-Mail</NOBR></P></TD>
 	<TD class="tr0 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD rowspan=3 class="tr10 td2"><P class="p7 ft11"><A href="mailto:{{ offer.email }}">{{ offer.email }}</A></P></TD>
+	<TD rowspan=3 class="tr10 td2"><P class="p7_7 ft11"><A href="mailto:{{ offer.email }}">{{ offer.email }}</A></P></TD>
 	<TD class="tr0 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr0 td4"><P class="p6 ft5">Bankkonto</P></TD>
 	<TD class="tr0 td5"><P class="p2 ft2">&nbsp;</P></TD>
@@ -294,7 +295,7 @@ position: absolute;
 	<TD class="tr11 td16"><P class="p2 ft12">&nbsp;</P></TD>
 </TR>
 <TR>
-	<TD rowspan=3 class="tr4 td2"><P class="p7 ft6">{{ offer.description }}</P></TD>
+	<TD rowspan=3 class="tr4 td2"><P class="p7_7 ft6">{{ offer.description }}</P></TD>
 	<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 	<TD class="tr14 td5"><P class="p2 ft15">&nbsp;</P></TD>
 	<TD colspan=2 rowspan=3 class="tr4 td6"><P class="p8 ft6">CH26 0483 5216 7077 3100 0</P></TD>
@@ -337,7 +338,7 @@ position: absolute;
 	<TD class="tr6 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr6 td4"><P class="p6 ft14">Rechnungsbetrag</P></TD>
 	<TD class="tr6 td5"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr6 td15"><P class="p8 ft6">CHF 5’310.00</P></TD>
+	<TD class="tr6 td15"><P class="p8 ft6">CHF {{ invoice_amount_total }}</P></TD>
 	<TD class="tr6 td16"><P class="p2 ft2">&nbsp;</P></TD>
 </TR>
 <TR>
