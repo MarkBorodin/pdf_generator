@@ -17,6 +17,9 @@ class Offer(BaseModel):
     client_name = models.TextField(max_length=128, null=True)
     email = models.EmailField(null=True)
     description = models.TextField(max_length=512, null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
 
     class Meta:
         ordering = ["-create_date"]

@@ -28,7 +28,7 @@ class OfferAdmin(admin.ModelAdmin):
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
-    fields = ('client_address', 'client_name', 'email', 'description')
+    fields = ('client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer')
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
         models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
