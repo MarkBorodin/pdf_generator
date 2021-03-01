@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
@@ -34,6 +36,7 @@ class ViewPDF(TemplateView):
         offer_number = self.kwargs['id']
         offer = Offer.objects.get(number=offer_number)
         context['offer'] = offer
+        context['zahlbar_bis'] = offer.create_date + timedelta(days=30)
         context['netto_price'] = offer.get_netto_price()
         context['mwst'] = offer.get_mwst()
         context['invoice_amount_total'] = offer.get_invoice_amount_total()
@@ -61,6 +64,7 @@ class GetPDF(PDFTemplateView):
         offer_number = self.kwargs['id']
         offer = Offer.objects.get(number=offer_number)
         context['offer'] = offer
+        context['zahlbar_bis'] = offer.create_date + timedelta(days=30)
         context['netto_price'] = offer.get_netto_price()
         context['mwst'] = offer.get_mwst()
         context['invoice_amount_total'] = offer.get_invoice_amount_total()

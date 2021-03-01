@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 {% load static %}
+{% load extras %}
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -195,7 +196,7 @@ position: absolute;
 <TR>
 	<TD class="tr1 td0"><P class="p1 ft1">Datum</P></TD>
 	<TD class="tr1 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}.{{ offer.create_date|date:"F"|slice:3 }}.{{ offer.create_date.year }}</P></TD>
+	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}. {{ offer.create_date|date:"F"|slice:3 }} {{ offer.create_date.year }}</P></TD>
 	<TD class="tr1 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td4"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td5"><P class="p2 ft2">&nbsp;</P></TD>
@@ -341,7 +342,7 @@ position: absolute;
 	<TD class="tr6 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr6 td4"><P class="p6 ft14">Rechnungsbetrag</P></TD>
 	<TD class="tr6 td5"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr6 td15"><P class="p8 ft6">CHF {{ invoice_amount_total }}</P></TD>
+	<TD class="tr6 td15"><P class="p8 ft6">CHF {{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
 	<TD class="tr6 td16"><P class="p2 ft2">&nbsp;</P></TD>
 </TR>
 <TR>
@@ -351,7 +352,7 @@ position: absolute;
 	<TD class="tr5 td3"><P class="p2 ft8">&nbsp;</P></TD>
 	<TD class="tr5 td4"><P class="p6 ft5">Zahlbar bis</P></TD>
 	<TD class="tr5 td5"><P class="p2 ft8">&nbsp;</P></TD>
-	<TD class="tr5 td15"><P class="p8 ft6">22.02.2021</P></TD>
+	<TD class="tr5 td15"><P class="p8 ft6">{{ zahlbar_bis.day }}.{{ zahlbar_bis.month }}.{{ zahlbar_bis.year }}</P></TD>
 	<TD class="tr5 td16"><P class="p2 ft8">&nbsp;</P></TD>
 </TR>
 <TR>
@@ -390,10 +391,10 @@ position: absolute;
 		<TD class="tr2 td1"><P class="p2 ft20">{{ item.0.name }}</P></TD>
 		<TD class="tr2 td2"><P class="p2 ft2">&nbsp</P></TD>
 		<TD rowspan=2 class="tr18 td3"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
-		<TD rowspan=2 class="tr18 td4"><P class="p10 ft19">{{ item.0.price }}</P></TD>
+		<TD rowspan=2 class="tr18 td4"><P class="p10 ft19">{{ item.0.price|floatformat:2  }}</P></TD>
 		<TD rowspan=2 class="tr18 td5"><P class="p13 ft19">{{ item.0.quantity }}</P></TD>
 		<TD rowspan=2 class="tr18 td15"><P class="p3 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
-		<TD rowspan=2 class="tr18 td16"><P class="p12 ft19">{{ item.0.get_subtotal }}</P></TD>
+		<TD rowspan=2 class="tr18 td16"><P class="p12 ft19">{{ item.0.get_subtotal|myround|floatformat:2 }}</P></TD>
 	</TR>
 	<TR>
 		<TD colspan=2 class="tr4 td24"><P class="p2_2 ft6">{{ item.0.description }}</P></TD>
@@ -423,12 +424,12 @@ position: absolute;
 <TR>
 	<TD class="tr0 td35"><P class="p2 ft19">Nettopreis</P></TD>
 	<TD class="tr0 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
-	<TD class="tr0 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ netto_price }}</P></TD>
+	<TD class="tr0 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ netto_price|myround|floatformat:2 }}</P></TD>
 </TR>
 <TR>
 	<TD class="tr20 td35"><P class="p2 ft19">MwSt. 7,7%</P></TD>
 	<TD class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
-	<TD class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ mwst }}</P></TD>
+	<TD class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ mwst|myround|floatformat:2 }}</P></TD>
 </TR>
 </TABLE>
 <TABLE cellpadding=0 cellspacing=0 class="t2">
@@ -436,7 +437,7 @@ position: absolute;
 	<TD class="tr13 td38"></TD>
 	<TD class="tr13 td35"><P class="p2 ft19">Rechnungsbetrag</P></TD>
 	<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
-	<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total }}</P></TD>
+	<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
 </TR>
 <TR>
 	<TD class="tr21 td38"></TD>
