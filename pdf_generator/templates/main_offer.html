@@ -1,5 +1,4 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-{% load extras %}
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,8 +21,8 @@ body {
   min-height: 100%;}
 #page_1 #id1_1 {border:none;margin: 35px 0px 0px 0px;padding: 0px;border:none;width: 794px;overflow: hidden;}
 #page_1 #id1_2 {
-  left: 0px;
-  right 250px;
+position: absolute;
+  left: 71px;
   bottom: 80px;
   width: 100%;
   height: 80px;
@@ -31,10 +30,20 @@ body {
   padding: 0px;
 }
 
-#page_1 #id1_2_0 {float:left;border:none;margin: 25px 0px 0px 70px;padding: 0px;border:none;width: 439px; overflow: hidden;}
-#page_1 #id1_2_1 {float:left;border:none;margin: 35px 0px 0px 70px;padding: 0px;border:none;width: 439px; overflow: hidden;}
-#page_1 #id1_2_2 {float:left;border:none;margin: -365px 0px 0px 500px;padding: 0px;border:none;width: 236px;overflow: hidden;}
-#page_1 #id1_3 {float:left;border:none;margin: 120px 0px 0px 70px;padding: 0px;border:none;width: 439px; overflow: hidden;}
+
+#page_1 #id1_2_0 {position: absolute;
+float:left;border:none;margin: 0px 0px 0px 0px;padding: 0px;border:none;width: 350px; overflow: hidden;}
+#page_1 #id1_2 #id1_2_1 {float:left;border:none;margin: 100px 0px 0px 0px;padding: 0px;border:none;width: 439px;overflow: hidden;}
+#page_1 #id1_2 #id1_2_2 {float:left;border:none;margin: 0px 0px 0px 0px;padding: 0px;border:none;width: 236px;overflow: hidden;}
+#page_1 #id1_3 {
+position: absolute;
+  left: 71px;
+  bottom: -70px;
+  width: 100%;
+  height: 80px;
+  border:none;
+  padding: 0px;
+}
 
 #page_1 #p1dimg1 {position:absolute;top:0px;left:0px;z-index:-1;width:794px;height:1123px;}
 #page_1 #p1dimg1 #p1img1 {width:794px;height:1123px;}
@@ -77,13 +86,11 @@ body {
 .p1{text-align: left;padding-left: 73px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_2{text-align: left;margin-top: 0px;margin-bottom: 0px;}
-.p2_22{text-align: left;margin-top: 40px;margin-bottom: 0px;}
 .p3{text-align: left;padding-left: 1px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p4{text-align: right;padding-right: 44px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p5{text-align: left;padding-left: 70px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p6{text-align: left;padding-left: 19px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-.p7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 9px;white-space: nowrap;}
 .p8{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p9{text-align: left;padding-left: 71px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p10{text-align: right;padding-right: 38px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
@@ -92,10 +99,9 @@ body {
 .p13{text-align: center;padding-right: 36px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p14{text-align: left;padding-left: 117px;margin-top: 0px;margin-bottom: 0px;}
 .p15{text-align: left;padding-right: 127px;margin-top: 0px;margin-bottom: 0px;}
-.p15_15{text-align: left;padding-right: 127px;margin-top: 0px;margin-bottom: 0px;}
 .p16{text-align: left;margin-top: 22px;margin-bottom: 0px;}
-.p17{text-align: left;margin-top: 0px;margin-bottom: 0px;}
-.p18{text-align: left;padding-left: 2px;margin-top: 55px;margin-bottom: 0px;}
+.p17{text-align: left;margin-top: 80px;margin-bottom: 0px;}
+.p18{text-align: left;padding-left: 2px;margin-top: 50px;margin-bottom: 0px;}
 
 .td0{padding: 0px;margin: 0px;width: 117px;vertical-align: bottom;}
 .td1{padding: 0px;margin: 0px;width: 67px;vertical-align: bottom;}
@@ -190,7 +196,7 @@ body {
 <TR>
 	<TD class="tr1 td0"><P class="p1 ft1">Datum</P></TD>
 	<TD class="tr1 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}. {{ offer.create_date|date:"F"|slice:3 }} {{ offer.create_date.year }}</P></TD>
+	<TD class="tr1 td2"><P class="p3 ft3">{{ offer.create_date.day }}.{{ offer.create_date|date:"F"|slice:3 }}.{{ offer.create_date.year }}</P></TD>
 	<TD class="tr1 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td4"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr1 td5"><P class="p2 ft2">&nbsp;</P></TD>
@@ -255,7 +261,7 @@ body {
 <TR>
 	<TD class="tr0 td0"><P class="p5 ft5"><NOBR>E-Mail</NOBR></P></TD>
 	<TD class="tr0 td1"><P class="p2 ft2">&nbsp;</P></TD>
-	<TD rowspan=3 class="tr10 td2"><P class="p7_7 ft11"><A href="mailto:{{ offer.email }}">{{ offer.email }}</A></P></TD>
+	<TD rowspan=3 class="tr10 td2"><P class="p7 ft11"><A href="mailto:{{ offer.email }}">{{ offer.email }}</A></P></TD>
 	<TD class="tr0 td3"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD class="tr0 td4"><P class="p6 ft5">Bankkonto</P></TD>
 	<TD class="tr0 td5"><P class="p2 ft2">&nbsp;</P></TD>
@@ -293,7 +299,7 @@ body {
 	<TD class="tr11 td16"><P class="p2 ft12">&nbsp;</P></TD>
 </TR>
 <TR>
-	<TD rowspan=3 class="tr4 td2"><P class="p7_7 ft6">{{ offer.description }}</P></TD>
+	<TD rowspan=3 class="tr4 td2"><P class="p7 ft6">{{ offer.description }}</P></TD>
 	<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 	<TD class="tr14 td5"><P class="p2 ft15">&nbsp;</P></TD>
 	<TD colspan=2 rowspan=3 class="tr4 td6"><P class="p8 ft6">CH26 0483 5216 7077 3100 0</P></TD>
@@ -365,10 +371,10 @@ body {
 		<TD class="tr2 td1"><P class="p2 ft20">{{ item.0.name }}</P></TD>
 		<TD class="tr2 td2"><P class="p2 ft2">&nbsp;</P></TD>
 		<TD rowspan=2 class="tr18 td3"><P class="p2 ft19">CHF</P></TD>
-		<TD rowspan=2 class="tr18 td4"><P class="p10 ft19">{{ item.0.price|floatformat:2 }}</P></TD>
+		<TD rowspan=2 class="tr18 td4"><P class="p10 ft19">{{ item.0.price }}</P></TD>
 		<TD rowspan=2 class="tr18 td5"><P class="p13 ft19">{{ item.0.quantity }}</P></TD>
 		<TD rowspan=2 class="tr18 td15"><P class="p3 ft19">CHF</P></TD>
-		<TD rowspan=2 class="tr18 td16"><P class="p12 ft19">{{ item.0.get_subtotal|myround|floatformat:2 }}</P></TD>
+		<TD rowspan=2 class="tr18 td16"><P class="p12 ft19">{{ item.0.get_subtotal }}</P></TD>
 	</TR>
 	<TR>
 		<TD colspan=2 class="tr4 td24"><P class="p2_2 ft6">{{ item.0.description }}</P></TD>
@@ -387,6 +393,9 @@ body {
 
 </TABLE>
 
+</DIV>
+<DIV id="id1_2">
+
 <DIV id="id1_2_0">
 	<P class="p15_15 ft20">Bemerkung: <SPAN class="ft6">{{ offer.bemerkung }}</SPAN>
 </DIV>
@@ -395,33 +404,25 @@ body {
 <P class="p15 ft23">Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: <A href="https://www.marketingmonkeys.ch/agb/">https://www.marketingmonkeys.ch/agb/</A></P>
 <P class="p16 ft6">Herzliche Grüsse</P>
 </DIV>
-
-<DIV id="id1_3">
-<P class="p17 ft6">Thomas Roth, CEO</P>
-<P class="p18 ft26">DATA DRIVEN <SPAN class="ft25">MARKETING</SPAN></P>
-</DIV>
-
-</DIV>
-
 <DIV id="id1_2_2">
 <TABLE cellpadding=0 cellspacing=0 class="t1">
 <TR>
 	<TD class="tr0 td35"><P class="p2 ft19">Nettopreis</P></TD>
 	<TD class="tr0 td36"><P class="p2 ft19">CHF</P></TD>
-	<TD class="tr0 td37"><P class="p2 ft19">{{ netto_price|myround|floatformat:2 }}</P></TD>
+	<TD class="tr0 td37"><P class="p2 ft19">{{ netto_price }}</P></TD>
 </TR>
 <TR>
 	<TD class="tr20 td35"><P class="p2 ft19">MwSt. 7,7%</P></TD>
 	<TD class="tr20 td36"><P class="p2 ft19">CHF</P></TD>
-	<TD class="tr20 td37"><P class="p2 ft19">{{ mwst|myround|floatformat:2 }}</P></TD>
+	<TD class="tr20 td37"><P class="p2 ft19">{{ mwst }}</P></TD>
 </TR>
 </TABLE>
 <TABLE cellpadding=0 cellspacing=0 class="t2">
 <TR>
 	<TD class="tr13 td38"></TD>
-	<TD class="tr13 td35"><P class="p2_22 ft19">Rechnungsbetrag</P></TD>
+	<TD class="tr13 td35"><P class="p2 ft19">Rechnungsbetrag</P></TD>
 	<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">CHF</P></TD>
-	<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">{{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
+	<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">{{ invoice_amount_total }}</P></TD>
 </TR>
 <TR>
 	<TD class="tr21 td38"></TD>
@@ -433,6 +434,11 @@ body {
 	<TD class="tr21 td37"><P class="p2 ft24">&nbsp;</P></TD>
 </TR>
 </TABLE>
+</DIV>
+</DIV>
+<DIV id="id1_3">
+<P class="p17 ft6">Thomas Roth, CEO</P>
+<P class="p18 ft26">DATA DRIVEN <SPAN class="ft25">MARKETING</SPAN></P>
 </DIV>
 </DIV>
 </BODY>

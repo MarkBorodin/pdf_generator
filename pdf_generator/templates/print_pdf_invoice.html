@@ -30,12 +30,14 @@ position: absolute;
   border:none;
   padding: 0px;
 }
-#page_1 #id1_2 #id1_2_1 {float:left;border:none;margin: 24px 0px 0px 0px;padding: 0px;border:none;width: 639px;overflow: hidden;}
-#page_1 #id1_2 #id1_2_2 {float:left;border:none;margin: 0px 0px 0px 0px;padding: 0px;border:none;width: 436px;overflow: hidden;}
+
+#page_1 #id1_2_0 {position: absolute;float:left;border:none;margin: -20px 0px 0px 0px;padding: 0px;border:none;width: 500px; overflow: hidden;}
+#page_1 #id1_2 #id1_2_1 {position: absolute;float:left;border:none;margin: 120px 0px 0px 0px;padding: 0px;border:none;width: 639px;overflow: hidden;}
+#page_1 #id1_2 #id1_2_2 {position: absolute;float:left;border:none;margin: -30px 0px 0px 600px;padding: 0px;border:none;width: 436px;overflow: hidden;}
 #page_1 #id1_3 {
 position: absolute;
   left: 71px;
-  bottom: 140px;
+  bottom: 160px;
   width: 100%;
   height: 80px;
   border:none;
@@ -83,6 +85,7 @@ position: absolute;
 .p1{text-align: left;padding-left: 73px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_2{text-align: left;margin-top: 0px;margin-bottom: 0px;}
+.p2_22{text-align: left;margin-top: 20px;margin-bottom: 0px;}
 .p3{text-align: left;padding-left: 1px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p4{text-align: right;padding-right: 44px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p5{text-align: left;padding-left: 70px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
@@ -103,8 +106,8 @@ position: absolute;
 .p14{text-align: left;padding-left: 117px;margin-top: 0px;margin-bottom: 0px;}
 .p15{text-align: left;padding-right: 127px;margin-top: 0px;margin-bottom: 0px;}
 .p16{text-align: left;margin-top: 22px;margin-bottom: 0px;}
-.p17{text-align: left;margin-top: -60px;margin-bottom: 0px;}
-.p18{text-align: left;padding-left: 2px;margin-top: 184px;margin-bottom: 0px;}
+.p17{text-align: left;margin-top: 45px;margin-bottom: 0px;}
+.p18{text-align: left;padding-left: 2px;margin-top: 74px;margin-bottom: 0px;}
 
 .td0{padding: 0px;margin: 0px;width: 117px;vertical-align: bottom;}
 .td1{padding: 0px;margin: 0px;width: 67px;vertical-align: bottom;}
@@ -416,8 +419,14 @@ position: absolute;
 
 </TABLE>
 
+
 </DIV>
 <DIV id="id1_2">
+
+<DIV id="id1_2_0">
+	<P class="p15_15 ft20">Bemerkung: <SPAN class="ft6">{{ offer.bemerkung }}</SPAN>
+</DIV>
+
 <DIV id="id1_2_1">
 <P class="p15 ft23">Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: <A href="https://www.marketingmonkeys.ch/agb/">https://www.marketingmonkeys.ch/agb/</A></P>
 <P class="p16 ft6">Herzliche Grüsse</P>
@@ -438,7 +447,7 @@ position: absolute;
 <TABLE cellpadding=0 cellspacing=0 class="t2">
 <TR>
 	<TD class="tr13 td38"></TD>
-	<TD class="tr13 td35"><P class="p2 ft19">Rechnungsbetrag</P></TD>
+	<TD class="tr13 td35"><P class="p2_22 ft19">Rechnungsbetrag</P></TD>
 	<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
 	<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
 </TR>
