@@ -20,6 +20,7 @@ class Offer(BaseModel):
     iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
     bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
     kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
 
     class Meta:
         ordering = ["-create_date"]
@@ -63,7 +64,7 @@ class Designation(BaseModel):
     quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 
     def __str__(self):
-        return f'{self.description}'
+        return f'{self.name}'
 
     def get_subtotal(self):
         self.subtotal = self.price * self.quantity
