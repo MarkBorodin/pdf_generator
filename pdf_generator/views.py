@@ -54,7 +54,7 @@ class ViewPDF(TemplateView):
 
 class GetPDF(PDFTemplateView):
     """get pdf file"""
-    template_name = 'print_pdf_invoice.html'
+    template_name = 'print_pdf_invoice_test.html'
     name = 'pdf'
     pk_url_kwarg = 'id'
     context_object_name = 'offer'
