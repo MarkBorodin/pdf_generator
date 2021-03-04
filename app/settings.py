@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pdf_generator',
     'wkhtmltopdf',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [

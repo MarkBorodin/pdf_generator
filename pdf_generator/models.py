@@ -40,7 +40,10 @@ class Offer(BaseModel):
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_netto_price(self):
-        designations = Designation.objects.filter(offer=self.number)
+        designations = Designation.objects.filter(
+            phase=Phase.objects.filter(page=Page.objects.filter(offer=self.number))
+        )
+
         self.netto_price = sum([designation.price * designation.quantity for designation in designations])
         self.netto_price = float('{:.1f}'.format(self.netto_price))
         return self.netto_price
@@ -56,8 +59,24 @@ class Offer(BaseModel):
         return self.invoice_amount_total
 
 
+class Page(BaseModel):
+    offer = models.ForeignKey(to=Offer, related_name='pages', on_delete=models.CASCADE)
+    number = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
+
+    def __str__(self):
+        return f'Page {self.number} (offer: {self.offer})'
+
+
+class Phase(BaseModel):
+    page = models.ForeignKey(to=Page, related_name='phases', on_delete=models.CASCADE)
+    name = models.TextField(max_length=128, null=True, blank=True, default='phase')
+
+    def __str__(self):
+        return f'{self.name} (page: {self.page})'
+
+
 class Designation(BaseModel):
-    offer = models.ForeignKey(to=Offer, related_name='designations', on_delete=models.CASCADE, null=False, blank=False)
+    phase = models.ForeignKey(to=Phase, related_name='designations', on_delete=models.CASCADE)
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=512, null=True)
     price = models.FloatField(null=False, blank=False, default=0)

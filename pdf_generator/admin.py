@@ -1,15 +1,15 @@
+import nested_admin
 from django.contrib import admin
-from django.db import models
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-
+from nested_admin.nested import NestedTabularInline
 
 from pdf_generator.forms import DesignationInlineFormSet
-from pdf_generator.models import Designation, Offer
+from .models import *
 
 
-class DesignationsInline(admin.TabularInline):
+class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
     model = Designation
     fields = ('name', 'description', 'price', 'quantity')
     show_change_link = True
@@ -20,8 +20,21 @@ class DesignationsInline(admin.TabularInline):
     }
 
 
-class OfferAdmin(admin.ModelAdmin):
-    inlines = (DesignationsInline,)
+class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):
+    model = Phase
+    inlines = [DesignationInline]
+    extra = 0
+
+
+class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):
+    model = Page
+    inlines = [PhaseInline]
+    extra = 0
+
+
+class OfferAdmin(nested_admin.NestedModelAdmin):
+    model = Offer
+    inlines = [PageInline]
     list_display = (
         'number', 'create_date', 'client_name', 'client_address', 'email', 'view_pdf_offer',
         'get_pdf_offer', 'view_pdf_invoice', 'get_pdf_invoice'
