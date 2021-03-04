@@ -41,7 +41,7 @@ class Offer(BaseModel):
 
     def get_netto_price(self):
         designations = Designation.objects.filter(
-            phase=Phase.objects.filter(page=Page.objects.filter(offer=self.number))
+            phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=self.number))
         )
 
         self.netto_price = sum([designation.price * designation.quantity for designation in designations])

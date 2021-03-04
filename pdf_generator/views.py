@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
-from pdf_generator.models import Designation, Offer
+from pdf_generator.models import Designation, Offer, Phase, Page
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -40,8 +40,10 @@ class ViewPDF(TemplateView):
         context['netto_price'] = offer.get_netto_price()
         context['mwst'] = offer.get_mwst()
         context['invoice_amount_total'] = offer.get_invoice_amount_total()
-        context['designations'] = Designation.objects.filter(offer=offer_number)
-        context['num_designations'] = list(range(1, Designation.objects.filter(offer=offer_number).count() + 1))
+        context['designations'] = Designation.objects.filter(
+            phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
+        )
+        context['num_designations'] = list(range(1, context['designations'].count() + 1))
         context['items'] = list()
         for designation, num in zip(context['designations'], context['num_designations']):
             context['items'].append((designation, num))
@@ -68,8 +70,10 @@ class GetPDF(PDFTemplateView):
         context['netto_price'] = offer.get_netto_price()
         context['mwst'] = offer.get_mwst()
         context['invoice_amount_total'] = offer.get_invoice_amount_total()
-        context['designations'] = Designation.objects.filter(offer=offer_number)
-        context['num_designations'] = list(range(1, Designation.objects.filter(offer=offer_number).count() + 1))
+        context['designations'] = Designation.objects.filter(
+            phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
+        )
+        context['num_designations'] = list(range(1, context['designations'].count() + 1))
         context['items'] = list()
         for designation, num in zip(context['designations'], context['num_designations']):
             context['items'].append((designation, num))
