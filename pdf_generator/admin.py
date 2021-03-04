@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
-from pdf_generator.forms import DesignationInlineFormSet
 from .models import *
 
 
@@ -14,7 +13,6 @@ class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
     fields = ('name', 'description', 'price', 'quantity')
     show_change_link = True
     extra = 0
-    formset = DesignationInlineFormSet
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 70})},
     }
@@ -24,6 +22,9 @@ class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):
     model = Phase
     inlines = [DesignationInline]
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
 
 
 class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):
@@ -49,7 +50,8 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
 
     def get_pdf_offer(self, obj): # noqa
         return mark_safe(
-            f'<a class="button" href="{reverse("pdf_generator:get_pdf_offer", args=[obj.pk])}">Get PDF offer</a>'
+            f'<a class="button" style="background: green;" '
+            f'href="{reverse("pdf_generator:get_pdf_offer", args=[obj.pk])}">Get PDF offer</a>'
         )
 
     def view_pdf_offer(self, obj): # noqa
@@ -60,7 +62,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
 
     def get_pdf_invoice(self, obj):  # noqa
         return mark_safe(
-            f'<a target="_blank" class="button" '
+            f'<a target="_blank" class="button" style="background: green;"'
             f'href="{reverse("pdf_generator:get_pdf_invoice", args=[obj.pk])}">Get PDF invoice</a>'
         )
 
