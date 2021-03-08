@@ -20,6 +20,7 @@ class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
 
 class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):
     model = Phase
+    fields = ('name',)
     inlines = [DesignationInline]
     extra = 0
     formfield_overrides = {

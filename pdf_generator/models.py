@@ -70,6 +70,7 @@ class Page(BaseModel):
 class Phase(BaseModel):
     page = models.ForeignKey(to=Page, related_name='phases', on_delete=models.CASCADE)
     name = models.TextField(max_length=128, null=True, blank=True, default='phase')
+    number = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -81,6 +82,7 @@ class Designation(BaseModel):
     description = models.TextField(max_length=512, null=True)
     price = models.FloatField(null=False, blank=False, default=0)
     quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
+    number = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'

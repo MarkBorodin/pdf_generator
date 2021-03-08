@@ -432,7 +432,7 @@ position: absolute;
 
 {% for designation in phase.designations.all %}
 	<TR>
-		<TD rowspan=2 class="tr18 td0"><P class="p9 ft19">{{ designation }}</P></TD>
+		<TD rowspan=2 class="tr18 td0"><P class="p9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
 		<TD class="tr2 td1"><P class="p2 ft20">{{ designation.name }}</P></TD>
 		<TD class="tr2 td2"><P class="p2 ft2">&nbsp</P></TD>
 		<TD rowspan=2 class="tr18 td3"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
