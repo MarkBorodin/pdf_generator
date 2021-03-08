@@ -1,13 +1,12 @@
 from datetime import timedelta
 
-from wkhtmltopdf.views import PDFTemplateView
+from pdf_generator.models import Designation, Offer, Page, Phase
 
-from pdf_generator.models import Designation, Offer, Phase, Page
+from wkhtmltopdf.views import PDFTemplateView
 
 
 class GetPDF(PDFTemplateView):
-    """get pdf file"""
-    name = 'pdf'
+    """get or see pdf file"""
     pk_url_kwarg = 'id'
     context_object_name = 'offer'
     template_name = 'print_pdf_base.html'

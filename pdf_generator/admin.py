@@ -1,11 +1,12 @@
-import nested_admin
 from django.contrib import admin
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+
+import nested_admin
 from nested_admin.nested import NestedTabularInline
 
-from .models import *
+from .models import Designation, Offer, Page, Phase, models
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
