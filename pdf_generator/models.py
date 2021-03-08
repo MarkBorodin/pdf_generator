@@ -64,7 +64,7 @@ class Page(BaseModel):
     number = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 
     def __str__(self):
-        return f'Page {self.number} (offer: {self.offer})'
+        return f'Page {self.number}'
 
 
 class Phase(BaseModel):
@@ -72,7 +72,7 @@ class Phase(BaseModel):
     name = models.TextField(max_length=128, null=True, blank=True, default='phase')
 
     def __str__(self):
-        return f'{self.name} (page: {self.page})'
+        return f'{self.name}'
 
 
 class Designation(BaseModel):

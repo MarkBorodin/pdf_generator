@@ -34,10 +34,7 @@ class GetPDF(PDFTemplateView):
         if context['number_of_pages'] == 1:
 
             if 'view_pdf_invoice' in self.request.build_absolute_uri():
-                # self.template_name = 'print_pdf_invoice_one_page.html'
-                # self.template_name = 'bottom_invoice.html'
-                # self.template_name = 'top_invoice.html'
-                self.template_name = 'bottom_invoice.html'
+                self.template_name = 'print_pdf_invoice_one_page.html'
                 self.show_content_in_browser = True
 
             if 'get_pdf_invoice' in self.request.build_absolute_uri():
@@ -50,6 +47,24 @@ class GetPDF(PDFTemplateView):
 
             if 'get_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_offer_one_page.html'
+                self.filename = 'Offerte_' + str(offer_number) + '.pdf'
+
+        elif context['number_of_pages'] > 1:
+
+            if 'view_pdf_invoice' in self.request.build_absolute_uri():
+                self.template_name = 'top_invoice.html'
+                self.show_content_in_browser = True
+
+            if 'get_pdf_invoice' in self.request.build_absolute_uri():
+                self.template_name = 'top_invoice.html'
+                self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
+
+            if 'view_pdf_offer' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer.html'
+                self.show_content_in_browser = True
+
+            if 'get_pdf_offer' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer.html'
                 self.filename = 'Offerte_' + str(offer_number) + '.pdf'
 
         return context

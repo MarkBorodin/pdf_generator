@@ -22,7 +22,10 @@ django-crispy-forms==1.9.2
 django-debug-toolbar==2.2
 django-easy-pdf==0.1.1
 django-extensions==3.0.5
+django-nested-admin==3.3.3
+django-nested-inline==0.4.2
 django-six==1.0.4
+django-super-inlines==0.1.4
 django-user-agents==0.4.0
 django-wkhtmltopdf==3.3.0
 django-xhtml2pdf==0.0.4
@@ -63,6 +66,8 @@ PyRect==0.1.4
 PyScreeze==0.1.26
 python-bidi==0.4.2
 python-dateutil==2.8.1
+python-monkey-business==1.0.0
+python-pdf==0.38
 python3-xlib==0.15
 PyTweening==1.0.3
 pytz==2020.1
