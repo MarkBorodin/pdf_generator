@@ -107,3 +107,9 @@ class Invoice(BaseModel):
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.IntegerField(null=True)
+
+    class Meta:
+        ordering = ["-create_date"]
+
+    def __str__(self):
+        return f'{self.number}'
