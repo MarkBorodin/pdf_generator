@@ -90,3 +90,20 @@ class Designation(BaseModel):
     def get_subtotal(self):
         self.subtotal = self.price * self.quantity
         return self.subtotal
+
+
+class Invoice(BaseModel):
+    offer = models.OneToOneField(to=Offer, related_name='invoice', on_delete=models.CASCADE)
+    number = models.IntegerField(primary_key=True)
+    client_address = models.TextField(max_length=512, null=True)
+    client_name = models.TextField(max_length=128, null=True)
+    email = models.EmailField(null=True)
+    description = models.TextField(max_length=512, null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    zahlbar_bis = models.DateTimeField(null=True)
+    netto_price = models.IntegerField(null=True)
+    mwst = models.IntegerField(null=True)
+    invoice_amount_total = models.IntegerField(null=True)
