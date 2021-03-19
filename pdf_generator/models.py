@@ -107,6 +107,8 @@ class Invoice(BaseModel):
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.IntegerField(null=True)
+    send = models.BooleanField(null=True, default=False)
+    paid = models.BooleanField(null=True, default=False)
 
     class Meta:
         ordering = ["-create_date"]

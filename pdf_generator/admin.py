@@ -40,7 +40,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
     inlines = [PageInline]
     list_display = (
         'number', 'create_date', 'client_name', 'client_address',
-        'email', 'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'update_invoice',
+        'email', 'view_pdf_offer', 'get_pdf_offer', 'create_invoice',
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
@@ -68,22 +68,22 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
             f'href="{reverse("pdf_generator:create_invoice", args=[obj.pk])}">Create invoice</a>'
         )
 
-    def update_invoice(self, obj): # noqa
-        return mark_safe(
-            f'<a target="_blank" class="button" style="background: orange;"'
-            f'href="{reverse("pdf_generator:update_invoice", args=[obj.pk])}">Update invoice</a>'
-        )
-
 
 class InvoiceAdmin(nested_admin.NestedModelAdmin):
     model = Invoice
     list_display = (
-        'number', 'create_date', 'client_name', 'client_address', 'email', 'view_pdf_invoice', 'get_pdf_invoice'
+        'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'paid', 'view_pdf_invoice',
+        'get_pdf_invoice'
     )
-    search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
-    list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
-    fields = ('client_address', 'client_name', 'email', 'description', 'iban',
-              'bic_swift', 'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total')
+    search_fields = (
+        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
+        'send', 'paid',
+                     )
+    list_filter = ('send', 'paid', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    fields = (
+        'send', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
+        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+    )
 
     def get_pdf_invoice(self, obj):  # noqa
         return mark_safe(
