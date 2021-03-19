@@ -382,6 +382,7 @@ position: absolute;
 {% for phase in page.phases.all %}
 
 <TABLE cellpadding=0 cellspacing=0 class="t0">
+{% if page.phases.all|length > 1 %}
 <TR>
 	<TD class="tr16 td17"><P class="p2 ft2">&nbsp;</P></TD>
 	<TD colspan=2 class="tr16 td18"><P class="p2 ft2">&nbsp;</P></TD>
@@ -400,6 +401,7 @@ position: absolute;
 	<TD class="tr10 td15"><P class="p2 ft2"></P></TD>
 	<TD class="tr10 td16"><P class="p12 ft17"></P></TD>
 </TR>
+{% endif %}
 <TR>
 	<TD class="tr17 td17"><P class="p2 ft18">&nbsp;</P></TD>
 	<TD class="tr17 td25"><P class="p2 ft18">&nbsp;</P></TD>
