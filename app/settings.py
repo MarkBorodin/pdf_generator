@@ -122,3 +122,9 @@ STATICFILES_DIRS = [
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
+
+
+from django.conf.locale.en import formats as es_formats
+
+SE_L10N = False
+es_formats.DATETIME_FORMAT = 'd. m. yy'

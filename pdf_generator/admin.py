@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.conf.locale.es import formats as es_formats
 
 import nested_admin
 from nested_admin.nested import NestedTabularInline
