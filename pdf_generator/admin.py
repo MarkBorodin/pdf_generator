@@ -50,6 +50,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
         models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
     }
 
+
     def get_pdf_offer(self, obj): # noqa
         return mark_safe(
             f'<a class="button" style="background: green;" '
@@ -84,6 +85,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):
         'send', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
         'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
     )
+    list_editable = ('send', 'paid',)
 
     def get_pdf_invoice(self, obj):  # noqa
         return mark_safe(
