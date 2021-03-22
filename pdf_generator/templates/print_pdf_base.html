@@ -370,7 +370,7 @@ position: absolute;
 		<TD class="tr6 td3"><P class="p2 ft2">&nbsp;</P></TD>
 		<TD class="tr6 td4"><P class="p6 ft14">Rechnungsbetrag</P></TD>
 		<TD class="tr6 td5"><P class="p2 ft2">&nbsp;</P></TD>
-		<TD class="tr6 td15"><P class="p8 ft6">CHF 5’310.00</P></TD>
+		<TD class="tr6 td15"><P class="p8 ft6">CHF {{ invoice.invoice_amount_total|myround|floatformat:2 }}</P></TD>
 		<TD class="tr6 td16"><P class="p2 ft2">&nbsp;</P></TD>
 	</TR>
 	<TR>
