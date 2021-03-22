@@ -1,11 +1,14 @@
 from datetime import timedelta
-
+from django.http import FileResponse, Http404, HttpResponse
+import PyPDF2
 from django.contrib import messages
 from django.shortcuts import redirect
 
 from pdf_generator.models import Designation, Offer, Page, Phase, Invoice
 
-from wkhtmltopdf.views import PDFTemplateView
+from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
+
+from pdf_generator.utils import remove_blank_page
 
 
 class GetPDF(PDFTemplateView):
@@ -26,7 +29,7 @@ class GetPDF(PDFTemplateView):
         context['designations'] = Designation.objects.filter(
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
         )
-        self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
+        # self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
         context['number_of_pages'] = Page.objects.filter(offer=offer_number).count()
 
         invoice = Invoice.objects.update_or_create(
@@ -57,6 +60,7 @@ class GetPDF(PDFTemplateView):
             if 'view_pdf_invoice' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_invoice_one_page.html'
                 self.show_content_in_browser = True
+                self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
 
             if 'get_pdf_invoice' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_invoice_one_page.html'
@@ -65,6 +69,7 @@ class GetPDF(PDFTemplateView):
             if 'view_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_offer_one_page.html'
                 self.show_content_in_browser = True
+                self.filename = 'Offerte_' + str(offer_number) + '.pdf'
 
             if 'get_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_offer_one_page.html'
@@ -75,6 +80,7 @@ class GetPDF(PDFTemplateView):
             if 'view_pdf_invoice' in self.request.build_absolute_uri():
                 self.template_name = 'top_invoice.html'
                 self.show_content_in_browser = True
+                self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
 
             if 'get_pdf_invoice' in self.request.build_absolute_uri():
                 self.template_name = 'top_invoice.html'
@@ -83,12 +89,31 @@ class GetPDF(PDFTemplateView):
             if 'view_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'top_offer.html'
                 self.show_content_in_browser = True
+                self.filename = 'Offerte_' + str(offer_number) + '.pdf'
 
             if 'get_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'top_offer.html'
                 self.filename = 'Offerte_' + str(offer_number) + '.pdf'
 
         return context
+
+    def render_to_response(self, context, **response_kwargs):
+        """delete blank page at end of file, save file, return file"""
+        response = super().render_to_response(context, **response_kwargs)
+        with open(f"media/results/test_{self.filename}", "wb") as f:
+            f.write(response.rendered_content)
+        remove_blank_page(self.filename)
+
+        if 'view_pdf' in self.request.build_absolute_uri():
+            with open(f"media/results/{self.filename}", 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/pdf')
+            return response
+
+        elif 'get_pdf' in self.request.build_absolute_uri():
+            with open(f"media/results/{self.filename}", 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/pdf')
+                response['Content-Disposition'] = "attachment; filename=" + self.filename
+            return response
 
 
 def create_update_invoice(request, id):
