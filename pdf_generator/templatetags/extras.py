@@ -8,3 +8,8 @@ def myround(x, prec=2, base=.05):
 
 
 register.filter('myround', myround)
+
+
+@register.simple_tag
+def define(obj):
+    return obj
