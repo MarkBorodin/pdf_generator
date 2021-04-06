@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from pdf_generator.models import Designation, Page, Phase, Offer, Invoice
+from pdf_generator.models import Designation, Page, Phase, Offer, Invoice, OfferConfirmation
 
 
 @receiver(post_save, sender=Phase)
@@ -44,3 +44,23 @@ def invoice_update(sender, instance, created, **kwargs):
         invoice.invoice_amount_total = instance.get_invoice_amount_total()
         invoice.create_date = instance.create_date
         invoice.save()
+
+
+@receiver(post_save, sender=Offer)
+def offer_confirmation_update(sender, instance, created, **kwargs):
+    if created is False:
+        offer_confirmation = OfferConfirmation.objects.get(offer=instance, number=instance.number)
+        offer_confirmation.client_address = instance.client_address
+        offer_confirmation.client_name = instance.client_name
+        offer_confirmation.email = instance.email
+        offer_confirmation.description = instance.description
+        offer_confirmation.iban = instance.iban
+        offer_confirmation.bic_swift = instance.bic_swift
+        offer_confirmation.kontonummer = instance.kontonummer
+        offer_confirmation.bemerkung = instance.bemerkung
+        offer_confirmation.zahlbar_bis = instance.create_date + timedelta(days=30)
+        offer_confirmation.netto_price = instance.get_netto_price()
+        offer_confirmation.mwst = instance.get_mwst()
+        offer_confirmation.invoice_amount_total = instance.get_invoice_amount_total()
+        offer_confirmation.create_date = instance.create_date
+        offer_confirmation.save()

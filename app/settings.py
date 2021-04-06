@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from django.conf.locale.en import formats as es_formats
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -126,8 +127,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
 
-
-from django.conf.locale.en import formats as es_formats
 
 SE_L10N = False
 es_formats.DATETIME_FORMAT = 'd. m. yy'

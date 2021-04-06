@@ -60,6 +60,7 @@ position: absolute;
 .dclr {clear:both;float:none;height:1px;margin:0px;padding:0px;overflow:hidden;}
 
 .ft0{font: bold 75px 'Roboto';color: #ffffff;line-height: 56px;}
+.ft00{font: bold 45px 'Roboto';color: #ffffff;line-height: 56px;}
 .ft1{font: 16px 'Roboto';color: #00b7f1;line-height: 17px;}
 .ft2{font: 4px 'Roboto';line-height: 4px;}
 .ft3{font: 16px 'Roboto';color: #ffffff;line-height: 17px;}
@@ -122,6 +123,8 @@ position: absolute;
 .p13_13{text-align: center;padding-right: 36px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
 .p14{text-align: left;padding-left: 117px;margin-top: 0px;margin-bottom: 0px;}
 .p15{text-align: left;padding-right: 127px;margin-top: 0px;margin-bottom: 0px;}
+.p15_5{text-align: left;padding-left: 0px;margin-top: 95px;margin-bottom: 0px; margin-left: 296px}
+.p15_55{text-align: left;padding-left: 0px;margin-top: 0px;margin-bottom: 0px; margin-left: 296px}
 .p16{text-align: left;margin-top: 22px;margin-bottom: 0px;}
 .p17{text-align: left;margin-top: 45px;margin-bottom: 0px;}
 .p18{text-align: left;padding-left: 2px;margin-top: 74px;margin-bottom: 0px;}
@@ -240,6 +243,27 @@ position: absolute;
 {% endif %}
 
 
+{% if type == "offer_confirmation" %}
+
+	{% define offer_confirmation.client_address as client_address %}
+	{% define offer_confirmation.client_name as client_name %}
+	{% define offer_confirmation.email as email %}
+	{% define offer_confirmation.description as description %}
+	{% define offer_confirmation.iban as iban %}
+	{% define offer_confirmation.bic_swift as bic_swift %}
+	{% define offer_confirmation.kontonummer as kontonummer %}
+	{% define offer_confirmation.bemerkung as bemerkung %}
+	{% define offer_confirmation.zahlbar_bis as zahlbar_bis %}
+	{% define offer_confirmation.netto_price as netto_price %}
+	{% define offer_confirmation.mwst as mwst %}
+	{% define offer_confirmation.invoice_amount_total as invoice_amount_total %}
+	{% define offer_confirmation.create_date as create_date %}
+	{% define offer_confirmation.number as number %}
+	{% define offer_confirmation.offer.pages.all as pages %}
+
+{% endif %}
+
+
 <DIV id="page_1">
 
 {% block background %}
@@ -250,8 +274,7 @@ position: absolute;
 	<DIV class="dclr"></DIV>
 
 	<DIV id="id1_1">
-		<P class="p0 ft0">{% block name %}TEMPLATE{% endblock %}</P>
-
+		{% block name %}<P class="p0 ft0">TEMPLATE</P>{% endblock %}
 
 		<TABLE cellpadding=0 cellspacing=0 class="t0">
 
@@ -557,10 +580,14 @@ position: absolute;
 					<P class="p15_15 ft20">Bemerkung: <SPAN class="ft6">{{ bemerkung }}</SPAN>
 				</DIV>
 
-				<DIV id="id1_2_1">
-					<P class="p15 ft23">Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: <A href="https://www.marketingmonkeys.ch/agb/">https://www.marketingmonkeys.ch/agb/</A></P>
-					<P class="p16 ft6">Herzliche Grüsse</P>
-				</DIV>
+					{% block above_signature %}
+						<DIV id="id1_2_1">
+							<P class="p15 ft23">Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: <A href="https://www.marketingmonkeys.ch/agb/">https://www.marketingmonkeys.ch/agb/</A></P>
+							<P class="p16 ft6">Herzliche Grüsse</P>
+						</DIV>
+					{% endblock %}
+
+
 
 			<DIV id="id1_2_2">
 				<TABLE cellpadding=0 cellspacing=0 class="t1">
@@ -600,8 +627,7 @@ position: absolute;
 			<P class="p17 ft6">Thomas Roth, CEO</P>
 			<P class="p18 ft26">DATA DRIVEN <SPAN class="ft25">MARKETING</SPAN></P>
 		</DIV>
-
-		{% endblock %}
+	{% endblock %}
 
 	</div>
 

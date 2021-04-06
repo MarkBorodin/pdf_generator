@@ -1,13 +1,11 @@
+import nested_admin
 from django.contrib import admin
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.conf.locale.es import formats as es_formats
-
-import nested_admin
 from nested_admin.nested import NestedTabularInline
 
-from .models import Designation, Offer, Page, Phase, models, Invoice
+from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
@@ -40,8 +38,8 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
     model = Offer
     inlines = [PageInline]
     list_display = (
-        'number', 'create_date', 'client_name', 'client_address',
-        'email', 'view_pdf_offer', 'get_pdf_offer', 'create_invoice',
+        'number', 'create_date', 'client_name', 'client_address', 'email',
+        'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
@@ -68,6 +66,12 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
         return mark_safe(
             f'<a target="_blank" class="button" style="background: purple;"'
             f'href="{reverse("pdf_generator:create_invoice", args=[obj.pk])}">Create invoice</a>'
+        )
+
+    def create_offer_confirmation(self, obj): # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button" style="background: orange;"'
+            f'href="{reverse("pdf_generator:create_offer_confirmation", args=[obj.pk])}">Create offer confirmation</a>'
         )
 
 
@@ -101,5 +105,38 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):
         )
 
 
+class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
+    model = OfferConfirmation
+    list_display = (
+        'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'signed',
+        'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation'
+    )
+    search_fields = (
+        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
+        'send', 'signed',
+                     )
+    list_filter = ('send', 'signed', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    fields = (
+        'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
+        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+    )
+    list_editable = ('send', 'signed',)
+
+    def view_pdf_offer_confirmation(self, obj): # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button" '
+            f'href="{reverse("pdf_generator:view_pdf_confirmation", args=[obj.pk])}">'
+            f'View PDF offer confirmation</a>'
+        )
+
+    def get_pdf_offer_confirmation(self, obj):  # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button" style="background: green;"'
+            f'href="{reverse("pdf_generator:get_pdf_confirmation", args=[obj.pk])}">'
+            f'Get PDF offer confirmation</a>'
+        )
+
+
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
+admin.site.register(OfferConfirmation, OfferConfirmationAdmin)

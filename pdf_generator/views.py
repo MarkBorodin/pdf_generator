@@ -1,13 +1,12 @@
 from datetime import timedelta
-from django.http import FileResponse, Http404, HttpResponse
-import PyPDF2
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import redirect
 
-from pdf_generator.models import Designation, Offer, Page, Phase, Invoice
+from wkhtmltopdf.views import PDFTemplateView
 
-from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
-
+from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, OfferConfirmation
 from pdf_generator.utils import remove_blank_page
 
 
@@ -29,7 +28,6 @@ class GetPDF(PDFTemplateView):
         context['designations'] = Designation.objects.filter(
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
         )
-        # self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
         context['number_of_pages'] = Page.objects.filter(offer=offer_number).count()
 
         invoice = Invoice.objects.update_or_create(
@@ -55,6 +53,29 @@ class GetPDF(PDFTemplateView):
         invoice[0].save()
         context['invoice'] = invoice[0]
 
+        offer_confirmation = OfferConfirmation.objects.update_or_create(
+            offer=offer,
+            number=offer.number,
+            defaults={
+                'client_address': offer.client_address,
+                'client_name': offer.client_name,
+                'email': offer.email,
+                'description': offer.description,
+                'iban': offer.iban,
+                'bic_swift': offer.bic_swift,
+                'kontonummer': offer.kontonummer,
+                'bemerkung': offer.bemerkung,
+                'zahlbar_bis': offer.create_date + timedelta(days=30),
+                'netto_price': offer.get_netto_price(),
+                'mwst': offer.get_mwst(),
+                'invoice_amount_total': offer.get_invoice_amount_total(),
+                'create_date': offer.create_date
+            }
+        )
+
+        offer_confirmation[0].save()
+        context['offer_confirmation'] = offer_confirmation[0]
+
         if context['number_of_pages'] == 1:
 
             if 'view_pdf_invoice' in self.request.build_absolute_uri():
@@ -67,6 +88,17 @@ class GetPDF(PDFTemplateView):
                 self.template_name = 'print_pdf_invoice_one_page.html'
                 self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
                 context['type'] = 'invoice'
+
+            if 'view_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'print_pdf_offer_confirmation_one_page.html'
+                self.show_content_in_browser = True
+                self.filename = 'Auftragsbestätigung_' + str(offer_number) + '.pdf'
+                context['type'] = 'offer_confirmation'
+
+            if 'get_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'print_pdf_offer_confirmation_one_page.html'
+                self.filename = 'Auftragsbestätigung_' + str(offer_number) + '.pdf'
+                context['type'] = 'offer_confirmation'
 
             if 'view_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'print_pdf_offer_one_page.html'
@@ -91,6 +123,17 @@ class GetPDF(PDFTemplateView):
                 self.template_name = 'top_invoice.html'
                 self.filename = 'Rechnung_' + str(offer_number) + '.pdf'
                 context['type'] = 'invoice'
+
+            if 'view_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer_confirmation.html'
+                self.show_content_in_browser = True
+                self.filename = 'Auftragsbestätigung_' + str(offer_number) + '.pdf'
+                context['type'] = 'offer_confirmation'
+
+            if 'get_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer_confirmation.html'
+                self.filename = 'Auftragsbestätigung_' + str(offer_number) + '.pdf'
+                context['type'] = 'offer_confirmation'
 
             if 'view_pdf_offer' in self.request.build_absolute_uri():
                 self.template_name = 'top_offer.html'
@@ -124,7 +167,7 @@ class GetPDF(PDFTemplateView):
             return response
 
 
-def create_update_invoice(request, id):
+def create_update_invoice(request, id): # noqa
     """create an invoice based on an offer"""
     offer_number = id
     offer = Offer.objects.get(number=offer_number)
@@ -151,5 +194,36 @@ def create_update_invoice(request, id):
 
     invoice[0].save()
     messages.info(request, 'Invoice has been successfully updated. Go to the "Invoice" section')
+
+    return redirect(request.META['HTTP_REFERER'])
+
+
+def create_update_offer_confirmation(request, id): # noqa
+    """create an offer_confirmation based on an offer"""
+    offer_number = id
+    offer = Offer.objects.get(number=offer_number)
+
+    offer_confirmation = OfferConfirmation.objects.update_or_create(
+        offer=offer,
+        number=offer.number,
+        defaults={
+            'client_address': offer.client_address,
+            'client_name': offer.client_name,
+            'email': offer.email,
+            'description': offer.description,
+            'iban': offer.iban,
+            'bic_swift': offer.bic_swift,
+            'kontonummer': offer.kontonummer,
+            'bemerkung': offer.bemerkung,
+            'zahlbar_bis': offer.create_date + timedelta(days=30),
+            'netto_price': offer.get_netto_price(),
+            'mwst': offer.get_mwst(),
+            'invoice_amount_total': offer.get_invoice_amount_total(),
+            'create_date': offer.create_date
+        }
+    )
+
+    offer_confirmation[0].save()
+    messages.info(request, 'Offer confirmation has been successfully updated. Go to the "Offer confirmations" section')
 
     return redirect(request.META['HTTP_REFERER'])
