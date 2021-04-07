@@ -109,18 +109,20 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
     model = OfferConfirmation
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'signed',
-        'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation'
+        'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
         'send', 'signed',
                      )
-    list_filter = ('send', 'signed', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description')
-    fields = (
-        'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
-        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+    list_filter = (
+        'send', 'signed', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description'
     )
-    list_editable = ('send', 'signed',)
+    fields = (
+        'signed_file', 'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
+        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+    )
+    list_editable = ('send', 'signed')
 
     def view_pdf_offer_confirmation(self, obj): # noqa
         return mark_safe(
@@ -135,6 +137,16 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
             f'href="{reverse("pdf_generator:get_pdf_confirmation", args=[obj.pk])}">'
             f'Get PDF offer confirmation</a>'
         )
+
+    def view_signed_file(self, obj):  # noqa
+        offer_confirmation = OfferConfirmation.objects.get(number=obj.pk)
+        file = offer_confirmation.signed_file
+        if file != None: # noqa
+            return mark_safe(
+                f'<a target="_blank" class="button" style="background: purple;"'
+                f'href="{reverse("pdf_generator:view_signed_file", args=[obj.pk])}">'
+                f'Signed file</a>'
+            )
 
 
 admin.site.register(Offer, OfferAdmin)

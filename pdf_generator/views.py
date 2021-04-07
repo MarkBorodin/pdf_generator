@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, FileResponse
 from django.shortcuts import redirect
 
 from wkhtmltopdf.views import PDFTemplateView
@@ -227,3 +227,27 @@ def create_update_offer_confirmation(request, id): # noqa
     messages.info(request, 'Offer confirmation has been successfully updated. Go to the "Offer confirmations" section')
 
     return redirect(request.META['HTTP_REFERER'])
+
+
+def view_signed_file(request, id): # noqa
+    # offer_confirmation = OfferConfirmation.objects.get(number=id)
+    # file = offer_confirmation.signed_file
+    # try:
+    #     with open(file, 'r') as f:
+    #         file_data = f.read()
+    #
+    #     # sending response
+    #     response = HttpResponse(file_data, content_type='application/vnd.ms-excel')
+    #     response['Content-Disposition'] = 'attachment; filename="foo.xls"'
+    #
+    # except IOError:
+    #     # handle file not exist case here
+    #     response = HttpResponseNotFound('<h1>File not exist</h1>')
+    #
+    # return response
+    try:
+        offer_confirmation = OfferConfirmation.objects.get(number=id)
+        file = offer_confirmation.signed_file
+        return FileResponse(file)
+    except Exception:
+        response = HttpResponseNotFound('<h1>File not exist</h1>')

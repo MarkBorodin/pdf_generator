@@ -134,6 +134,7 @@ class OfferConfirmation(BaseModel):
     invoice_amount_total = models.IntegerField(null=True)
     send = models.BooleanField(default=False)
     signed = models.BooleanField(default=False)
+    signed_file = models.FileField(null=True)
 
     class Meta:
         ordering = ["-create_date"]

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import GetPDF, create_update_invoice, create_update_offer_confirmation
+from .views import GetPDF, create_update_invoice, create_update_offer_confirmation, view_signed_file
 
 app_name = "pdf_generator"
 
@@ -20,4 +20,5 @@ urlpatterns = [
     # order_confirmation
     path('get_pdf_confirmation/<int:id>', GetPDF.as_view(), name='get_pdf_confirmation'),
     path('view_pdf_confirmation/<int:id>', GetPDF.as_view(), name='view_pdf_confirmation'),
+    path('view_signed_file/<int:id>', view_signed_file, name='view_signed_file'),
 ]
