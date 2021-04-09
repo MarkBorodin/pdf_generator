@@ -38,9 +38,9 @@ class GetPDF(PDFTemplateView):
                 'client_name': offer.client_name,
                 'email': offer.email,
                 'description': offer.description,
-                'iban': offer.iban,
-                'bic_swift': offer.bic_swift,
-                'kontonummer': offer.kontonummer,
+                'iban': offer.payment_information.iban,
+                'bic_swift': offer.payment_information.bic_swift,
+                'kontonummer': offer.payment_information.kontonummer,
                 'bemerkung': offer.bemerkung,
                 'zahlbar_bis': offer.create_date + timedelta(days=30),
                 'netto_price': offer.get_netto_price(),
@@ -61,9 +61,9 @@ class GetPDF(PDFTemplateView):
                 'client_name': offer.client_name,
                 'email': offer.email,
                 'description': offer.description,
-                'iban': offer.iban,
-                'bic_swift': offer.bic_swift,
-                'kontonummer': offer.kontonummer,
+                'iban': offer.payment_information.iban,
+                'bic_swift': offer.payment_information.bic_swift,
+                'kontonummer': offer.payment_information.kontonummer,
                 'bemerkung': offer.bemerkung,
                 'zahlbar_bis': offer.create_date + timedelta(days=30),
                 'netto_price': offer.get_netto_price(),
@@ -180,9 +180,9 @@ def create_update_invoice(request, id): # noqa
             'client_name': offer.client_name,
             'email': offer.email,
             'description': offer.description,
-            'iban': offer.iban,
-            'bic_swift': offer.bic_swift,
-            'kontonummer': offer.kontonummer,
+            'iban': offer.payment_information.iban,
+            'bic_swift': offer.payment_information.bic_swift,
+            'kontonummer': offer.payment_information.kontonummer,
             'bemerkung': offer.bemerkung,
             'zahlbar_bis': offer.create_date + timedelta(days=30),
             'netto_price': offer.get_netto_price(),
@@ -211,9 +211,9 @@ def create_update_offer_confirmation(request, id): # noqa
             'client_name': offer.client_name,
             'email': offer.email,
             'description': offer.description,
-            'iban': offer.iban,
-            'bic_swift': offer.bic_swift,
-            'kontonummer': offer.kontonummer,
+            'iban': offer.payment_information.iban,
+            'bic_swift': offer.payment_information.bic_swift,
+            'kontonummer': offer.payment_information.kontonummer,
             'bemerkung': offer.bemerkung,
             'zahlbar_bis': offer.create_date + timedelta(days=30),
             'netto_price': offer.get_netto_price(),
@@ -230,24 +230,10 @@ def create_update_offer_confirmation(request, id): # noqa
 
 
 def view_signed_file(request, id): # noqa
-    # offer_confirmation = OfferConfirmation.objects.get(number=id)
-    # file = offer_confirmation.signed_file
-    # try:
-    #     with open(file, 'r') as f:
-    #         file_data = f.read()
-    #
-    #     # sending response
-    #     response = HttpResponse(file_data, content_type='application/vnd.ms-excel')
-    #     response['Content-Disposition'] = 'attachment; filename="foo.xls"'
-    #
-    # except IOError:
-    #     # handle file not exist case here
-    #     response = HttpResponseNotFound('<h1>File not exist</h1>')
-    #
-    # return response
     try:
         offer_confirmation = OfferConfirmation.objects.get(number=id)
         file = offer_confirmation.signed_file
         return FileResponse(file)
     except Exception:
         response = HttpResponseNotFound('<h1>File not exist</h1>')
+        return response

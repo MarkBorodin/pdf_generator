@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
-from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation, Signature
+from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation, Signature, PaymentInformation
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
@@ -44,8 +44,8 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
-        'client_address', 'client_name', 'email', 'description', 'bemerkung', 'iban',
-        'bic_swift', 'kontonummer', 'signature',
+        'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
+        'signature',
     )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
@@ -165,6 +165,20 @@ class SignatureAdmin(nested_admin.NestedModelAdmin):
     }
 
 
+class PaymentInformationAdmin(nested_admin.NestedModelAdmin):
+    model = Signature
+    list_display = (
+        'currency', 'iban', 'bic_swift', 'kontonummer',
+    )
+    search_fields = ('currency', 'iban', 'bic_swift', 'kontonummer',)
+    list_filter = ( 'currency', 'iban', 'bic_swift', 'kontonummer',)
+    fields = ('currency', 'iban', 'bic_swift', 'kontonummer',)
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
+
+
+admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)

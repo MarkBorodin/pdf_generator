@@ -209,9 +209,9 @@ position: absolute;
 	{% define offer.client_name as client_name %}
 	{% define offer.email as email %}
 	{% define offer.description as description %}
-	{% define offer.iban as iban %}
-	{% define offer.bic_swift as bic_swift %}
-	{% define offer.kontonummer as kontonummer %}
+	{% define offer.payment_information.iban as iban %}
+	{% define offer.payment_information.bic_swift as bic_swift %}
+	{% define offer.payment_information.kontonummer as kontonummer %}
 	{% define offer.bemerkung as bemerkung %}
 	{% define zahlbar_bis as zahlbar_bis %}
 	{% define netto_price as netto_price %}
@@ -222,6 +222,7 @@ position: absolute;
 	{% define offer.pages.all as pages %}
 	{% define offer.signature.name as name %}
 	{% define offer.signature.image_code as image_code %}
+	{% define offer.payment_information.currency as currency %}
 
 {% endif %}
 
@@ -245,6 +246,7 @@ position: absolute;
 	{% define invoice.offer.pages.all as pages %}
 	{% define invoice.offer.signature.name as name %}
 	{% define invoice.offer.signature.image_code as image_code %}
+	{% define invoice.offer.payment_information.currency as currency %}
 
 {% endif %}
 
@@ -268,6 +270,7 @@ position: absolute;
 	{% define offer_confirmation.offer.pages.all as pages %}
 	{% define offer_confirmation.offer.signature.name as name %}
 	{% define offer_confirmation.offer.signature.image_code as image_code %}
+	{% define offer_confirmation.offer.payment_information.currency as currency %}
 
 {% endif %}
 
@@ -387,7 +390,7 @@ position: absolute;
 			<TD class="tr12 td1"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD rowspan=3 class="tr5 td15"><P class="p8_8_8 ft6"><NOBR>2167077-32</NOBR></P></TD>
+			<TD rowspan=3 class="tr5 td15"><P class="p8_8_8 ft6"><NOBR>{{ kontonummer }}</NOBR></P></TD>
 			<TD class="tr12 td16"><P class="p2 ft13">&nbsp;</P></TD>
 		</TR>
 		<TR>
@@ -408,7 +411,7 @@ position: absolute;
 			<TD rowspan=3 class="tr4 td2"><P class="p7_7 ft6">{{ description }}</P></TD>
 			<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD class="tr14 td5"><P class="p2 ft15">&nbsp;</P></TD>
-			<TD colspan=2 rowspan=3 class="tr4 td6"><P class="p8_8 ft6">CH26 0483 5216 7077 3100 0</P></TD>
+			<TD colspan=2 rowspan=3 class="tr4 td6"><P class="p8_8 ft6">{{ iban }}</P></TD>
 		</TR>
 		<TR>
 			<TD class="tr12 td0"><P class="p2 ft13">&nbsp;</P></TD>
@@ -429,7 +432,7 @@ position: absolute;
 			<TD class="tr15 td2"><P class="p2 ft16">&nbsp;</P></TD>
 			<TD class="tr15 td3"><P class="p2 ft16">&nbsp;</P></TD>
 			<TD class="tr15 td5"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD rowspan=2 class="tr5 td15"><P class="p8_8_8 ft6">CRESCHZZ80A</P></TD>
+			<TD rowspan=2 class="tr5 td15"><P class="p8_8_8 ft6">{{ bic_swift }}</P></TD>
 			<TD class="tr15 td16"><P class="p2 ft16">&nbsp;</P></TD>
 		</TR>
 		<TR>
@@ -449,7 +452,7 @@ position: absolute;
 				<TD class="tr6 td3"><P class="p2 ft2">&nbsp;</P></TD>
 				<TD class="tr6 td4"><P class="p6 ft14">Rechnungsbetrag</P></TD>
 				<TD class="tr6 td5"><P class="p2 ft2">&nbsp;</P></TD>
-				<TD class="tr6 td15"><P class="p8 ft6">CHF {{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
+				<TD class="tr6 td15"><P class="p8 ft6">{{ currency }} {{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
 				<TD class="tr6 td16"><P class="p2 ft2">&nbsp;</P></TD>
 			</TR>
 			<TR>
@@ -535,10 +538,10 @@ position: absolute;
 				<TD rowspan=2 class="tr18 td0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
 				<TD class="tr18 td1"><P class="p2_222 ft20">{{ designation.name }}</P></TD>
 				<TD class="tr18 td2"><P class="p2_222 ft2">&nbsp</P></TD>
-				<TD rowspan=2 class="tr18 td3"><P class="p2_2222 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
+				<TD rowspan=2 class="tr18 td3"><P class="p2_2222 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
 				<TD rowspan=2 class="tr18 td4"><P class="p10_10 ft19">{{ designation.price|floatformat:2  }}</P></TD>
 				<TD rowspan=2 class="tr18 td5"><P class="p13_13 ft19">{{ designation.quantity }}</P></TD>
-				<TD rowspan=2 class="tr18 td15"><P class="p3_3 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
+				<TD rowspan=2 class="tr18 td15"><P class="p3_3 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
 				<TD rowspan=2 class="tr18 td16"><P class="p12_12 ft19">{{ designation.get_subtotal|myround|floatformat:2 }}</P></TD>
 			</TR>
 			<TR>
@@ -608,12 +611,12 @@ position: absolute;
 				<TABLE cellpadding=0 cellspacing=0 class="t1">
 					<TR>
 						<TD class="tr0 td35"><P class="p2 ft19">Nettopreis</P></TD>
-						<TD class="tr0 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
+						<TD class="tr0 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
 						<TD class="tr0 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ netto_price|myround|floatformat:2 }}</P></TD>
 					</TR>
 					<TR>
 						<TD class="tr20 td35"><P class="p2 ft19">MwSt. 7,7%</P></TD>
-						<TD class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
+						<TD class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
 						<TD class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ mwst|myround|floatformat:2 }}</P></TD>
 					</TR>
 				</TABLE>
@@ -622,7 +625,7 @@ position: absolute;
 					<TR>
 						<TD class="tr13 td38"></TD>
 						<TD class="tr13 td35"><P class="p2_22 ft19">Rechnungsbetrag</P></TD>
-						<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHF</P></TD>
+						<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
 						<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total|myround|floatformat:2 }}</P></TD>
 					</TR>
 					<TR>

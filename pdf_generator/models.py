@@ -2,8 +2,6 @@ import datetime
 
 from django.db import models
 
-from pdf_generator.utils import image_to_code
-
 
 class BaseModel(models.Model):
     class Meta:
@@ -18,8 +16,24 @@ class Signature(BaseModel):
     image_code = models.TextField(null=True)
     name = models.TextField(null=False)
 
+    class Meta:
+        ordering = ["-create_date"]
+
     def __str__(self):
         return f'{self.name}'
+
+
+class PaymentInformation(BaseModel):
+    currency = models.TextField(max_length=32, default='CHF', null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+
+    class Meta:
+        ordering = ["-create_date"]
+
+    def __str__(self):
+        return f'{self.currency}'
 
 
 class Offer(BaseModel):
@@ -28,11 +42,9 @@ class Offer(BaseModel):
     client_name = models.TextField(max_length=128, null=True)
     email = models.EmailField(null=True)
     description = models.TextField(max_length=512, null=True)
-    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
-    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
-    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
-    bemerkung = models.TextField(max_length=512, null=True, blank=True)
     signature = models.ForeignKey(to=Signature, null=True, related_name='offers', on_delete=models.SET_NULL)
+    payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='offers', on_delete=models.SET_NULL) # noqa
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
 
     class Meta:
         ordering = ["-create_date"]

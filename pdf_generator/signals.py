@@ -43,9 +43,9 @@ def invoice_update(sender, instance, created, **kwargs):
         invoice.client_name = instance.client_name
         invoice.email = instance.email
         invoice.description = instance.description
-        invoice.iban = instance.iban
-        invoice.bic_swift = instance.bic_swift
-        invoice.kontonummer = instance.kontonummer
+        invoice.iban = instance.payment_information.iban
+        invoice.bic_swift = instance.payment_information.bic_swift
+        invoice.kontonummer = instance.payment_information.kontonummer
         invoice.bemerkung = instance.bemerkung
         invoice.zahlbar_bis = instance.create_date + timedelta(days=30)
         invoice.netto_price = instance.get_netto_price()
@@ -63,9 +63,9 @@ def offer_confirmation_update(sender, instance, created, **kwargs):
         offer_confirmation.client_name = instance.client_name
         offer_confirmation.email = instance.email
         offer_confirmation.description = instance.description
-        offer_confirmation.iban = instance.iban
-        offer_confirmation.bic_swift = instance.bic_swift
-        offer_confirmation.kontonummer = instance.kontonummer
+        offer_confirmation.iban = instance.payment_information.iban
+        offer_confirmation.bic_swift = instance.payment_information.bic_swift
+        offer_confirmation.kontonummer = instance.payment_information.kontonummer
         offer_confirmation.bemerkung = instance.bemerkung
         offer_confirmation.zahlbar_bis = instance.create_date + timedelta(days=30)
         offer_confirmation.netto_price = instance.get_netto_price()
