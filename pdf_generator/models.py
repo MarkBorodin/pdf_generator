@@ -2,6 +2,8 @@ import datetime
 
 from django.db import models
 
+from pdf_generator.utils import image_to_code
+
 
 class BaseModel(models.Model):
     class Meta:
@@ -9,6 +11,15 @@ class BaseModel(models.Model):
 
     create_date = models.DateTimeField(null=True, auto_now_add=True)
     write_date = models.DateTimeField(null=True, auto_now=True)
+
+
+class Signature(BaseModel):
+    image = models.ImageField()
+    image_code = models.TextField(null=True)
+    name = models.TextField(null=False)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Offer(BaseModel):
@@ -21,6 +32,7 @@ class Offer(BaseModel):
     bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
     kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    signature = models.ForeignKey(to=Signature, null=True, related_name='offers', on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["-create_date"]

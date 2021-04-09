@@ -1,5 +1,5 @@
 import os
-
+import base64
 import PyPDF2
 
 
@@ -31,3 +31,12 @@ def remove_blank_page(file):
 
     file1_reader.close()
     os.remove(file1)
+
+
+def image_to_code(image):
+    data = open(f'media/{image}', 'rb').read()  # read bytes from file
+    data_base64 = base64.b64encode(data)  # encode to base64 (bytes)
+    data_base64 = data_base64.decode()    # convert bytes to string
+
+    html = '<img src="data:image/png;base64,' + data_base64 + '" id="p1img5">'   # embed in html
+    return html

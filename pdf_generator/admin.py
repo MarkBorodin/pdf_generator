@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
-from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation
+from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation, Signature
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
@@ -43,7 +43,10 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
-    fields = ('client_address', 'client_name', 'email', 'description', 'bemerkung', 'iban', 'bic_swift', 'kontonummer')
+    fields = (
+        'client_address', 'client_name', 'email', 'description', 'bemerkung', 'iban',
+        'bic_swift', 'kontonummer', 'signature',
+    )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
         models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
@@ -149,6 +152,20 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
             )
 
 
+class SignatureAdmin(nested_admin.NestedModelAdmin):
+    model = Signature
+    list_display = (
+        'id', 'image', 'name',
+    )
+    search_fields = ('id', 'image', 'name', )
+    list_filter = ('id', 'image', 'name', )
+    fields = ('image', 'name', )
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 170})},
+    }
+
+
+admin.site.register(Signature, SignatureAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)

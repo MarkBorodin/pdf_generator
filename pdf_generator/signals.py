@@ -3,7 +3,16 @@ from datetime import timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from pdf_generator.models import Designation, Page, Phase, Offer, Invoice, OfferConfirmation
+from pdf_generator.models import Designation, Page, Phase, Offer, Invoice, OfferConfirmation, Signature
+from pdf_generator.utils import image_to_code
+
+
+@receiver(post_save, sender=Signature)
+def get_code_from_image(sender, instance, created, **kwargs):
+    if created:
+        obj = Signature.objects.get(id=instance.id)
+        obj.image_code = image_to_code(instance.image)
+        obj.save()
 
 
 @receiver(post_save, sender=Phase)
