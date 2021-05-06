@@ -18,6 +18,8 @@ class Signature(BaseModel):
 
     class Meta:
         ordering = ["-create_date"]
+        verbose_name = "Signatur"
+        verbose_name_plural = "Signaturen"
 
     def __str__(self):
         return f'{self.name}'
@@ -31,6 +33,8 @@ class PaymentInformation(BaseModel):
 
     class Meta:
         ordering = ["-create_date"]
+        verbose_name = "Zahlungsinformation"
+        verbose_name_plural = "Zahlungsinformationen"
 
     def __str__(self):
         return f'{self.currency}'
@@ -48,6 +52,8 @@ class Offer(BaseModel):
 
     class Meta:
         ordering = ["-create_date"]
+        verbose_name = "Offerte"
+        verbose_name_plural = "Offerten"
 
     def __str__(self):
         return f'{self.number}'
@@ -136,6 +142,8 @@ class Invoice(BaseModel):
 
     class Meta:
         ordering = ["-create_date"]
+        verbose_name = "Rechnung"
+        verbose_name_plural = "Rechnugen"
 
     def __str__(self):
         return f'{self.number}'
@@ -162,6 +170,8 @@ class OfferConfirmation(BaseModel):
 
     class Meta:
         ordering = ["-create_date"]
+        verbose_name = "Auftragsbestätigung"
+        verbose_name_plural = "Auftragsbestätigungen"
 
     def __str__(self):
         return f'{self.number}'
