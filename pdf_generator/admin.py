@@ -8,7 +8,7 @@ from nested_admin.nested import NestedTabularInline
 from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation, Signature, PaymentInformation
 
 
-class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
+class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
     model = Designation
     fields = ('name', 'description', 'price', 'quantity')
     show_change_link = True
@@ -18,7 +18,7 @@ class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline):
     }
 
 
-class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):
+class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
     model = Phase
     fields = ('name',)
     inlines = [DesignationInline]
@@ -28,13 +28,13 @@ class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):
     }
 
 
-class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):
+class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
     model = Page
     inlines = [PhaseInline]
     extra = 0
 
 
-class OfferAdmin(nested_admin.NestedModelAdmin):
+class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Offer
     inlines = [PageInline]
     list_display = (
@@ -42,7 +42,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
         'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
-    list_filter = ('number', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
         'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
         'signature',
@@ -78,7 +78,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):
         )
 
 
-class InvoiceAdmin(nested_admin.NestedModelAdmin):
+class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Invoice
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'paid', 'view_pdf_invoice',
@@ -88,7 +88,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
         'send', 'paid',
                      )
-    list_filter = ('send', 'paid', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    list_filter = ('send', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
         'send', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
         'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
@@ -108,7 +108,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):
         )
 
 
-class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
+class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = OfferConfirmation
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'signed',
@@ -119,7 +119,7 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
         'send', 'signed',
                      )
     list_filter = (
-        'send', 'signed', 'number', 'create_date', 'client_address', 'client_name', 'email', 'description'
+        'send', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description'
     )
     fields = (
         'signed_file', 'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
@@ -142,7 +142,7 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
         )
 
     def view_signed_file(self, obj):  # noqa
-        offer_confirmation = OfferConfirmation.objects.get(number=obj.pk)
+        offer_confirmation = OfferConfirmation.objects.get(number=obj.pk)  # noqa
         file = offer_confirmation.signed_file
         if file != None: # noqa
             return mark_safe(
@@ -152,7 +152,7 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):
             )
 
 
-class SignatureAdmin(nested_admin.NestedModelAdmin):
+class SignatureAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Signature
     list_display = (
         'id', 'image', 'name',
@@ -165,13 +165,13 @@ class SignatureAdmin(nested_admin.NestedModelAdmin):
     }
 
 
-class PaymentInformationAdmin(nested_admin.NestedModelAdmin):
+class PaymentInformationAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Signature
     list_display = (
         'currency', 'iban', 'bic_swift', 'kontonummer',
     )
     search_fields = ('currency', 'iban', 'bic_swift', 'kontonummer',)
-    list_filter = ( 'currency', 'iban', 'bic_swift', 'kontonummer',)
+    list_filter = ('currency', 'iban', 'bic_swift', 'kontonummer',)
     fields = ('currency', 'iban', 'bic_swift', 'kontonummer',)
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},

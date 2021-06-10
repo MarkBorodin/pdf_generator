@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 {% load static %}
 {% load extras %}
+{% load i18n %}
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -308,7 +309,7 @@ position: absolute;
 		<TR>
 			<TD class="tr1 td0"><P class="p1 ft1">Datum</P></TD>
 			<TD class="tr1 td1"><P class="p2 ft2">&nbsp;</P></TD>
-			<TD class="tr1 td2"><P class="p3 ft3">{{ create_date.day }}. {{ create_date|date:"F"|slice:3 }} {{ create_date.year }}</P></TD>
+			<TD class="tr1 td2"><P class="p3 ft3">{% language 'de' %} {{ create_date.day }}. {{ create_date|date:"F"|slice:3 }} {{ create_date.year }}  {% endlanguage %}</P></TD>
 			<TD class="tr1 td3"><P class="p2 ft2">&nbsp;</P></TD>
 			<TD class="tr1 td4"><P class="p2 ft2">&nbsp;</P></TD>
 			<TD class="tr1 td5"><P class="p2 ft2">&nbsp;</P></TD>
