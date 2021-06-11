@@ -40,6 +40,18 @@ class PaymentInformation(BaseModel):
         return f'{self.currency}'
 
 
+class Category(BaseModel):
+    name = models.TextField(max_length=128, null=False)
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Kategorie"
+        verbose_name_plural = "Kategorien"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Offer(BaseModel):
     number = models.IntegerField(primary_key=True)
     client_address = models.TextField(max_length=512, null=True)
@@ -48,7 +60,9 @@ class Offer(BaseModel):
     description = models.TextField(max_length=512, null=True)
     signature = models.ForeignKey(to=Signature, null=True, related_name='offers', on_delete=models.SET_NULL)
     payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='offers', on_delete=models.SET_NULL) # noqa
+    category = models.ForeignKey(to=Category, null=True, related_name='offers', on_delete=models.SET_NULL)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["-create_date"]
@@ -68,6 +82,7 @@ class Offer(BaseModel):
             if len(self.number) == 8:
                 self.number += '0'
         super(self.__class__, self).save(*args, **kwargs)
+        # self.price = self.get_netto_price() + self.get_mwst()
 
     def get_netto_price(self):
         designations = Designation.objects.filter(
@@ -139,6 +154,7 @@ class Invoice(BaseModel):
     invoice_amount_total = models.IntegerField(null=True)
     send = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
+    category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["-create_date"]
@@ -167,6 +183,7 @@ class OfferConfirmation(BaseModel):
     send = models.BooleanField(default=False)
     signed = models.BooleanField(default=False)
     signed_file = models.FileField(null=True)
+    category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["-create_date"]

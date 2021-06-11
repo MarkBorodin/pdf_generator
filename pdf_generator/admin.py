@@ -5,7 +5,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
-from .models import Designation, Offer, Page, Phase, models, Invoice, OfferConfirmation, Signature, PaymentInformation
+from .models import Category, Designation, Offer, Page, Phase, models, Invoice,\
+    OfferConfirmation, Signature, PaymentInformation
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
@@ -38,14 +39,14 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Offer
     inlines = [PageInline]
     list_display = (
-        'number', 'create_date', 'client_name', 'client_address', 'email',
+        'number', 'create_date', 'client_name', 'price', 'category',
         'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
         'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
-        'signature',
+        'signature', 'category'
     )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
@@ -81,8 +82,8 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
 class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Invoice
     list_display = (
-        'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'paid', 'view_pdf_invoice',
-        'get_pdf_invoice'
+        'number', 'zahlbar_bis', 'client_name', 'invoice_amount_total', 'category',
+        'send', 'paid', 'view_pdf_invoice', 'get_pdf_invoice'
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
@@ -91,7 +92,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     list_filter = ('send', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
         'send', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
-        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
     )
     list_editable = ('send', 'paid',)
 
@@ -111,8 +112,8 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
 class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = OfferConfirmation
     list_display = (
-        'number', 'zahlbar_bis', 'client_name', 'client_address', 'email', 'send', 'signed',
-        'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
+        'number', 'zahlbar_bis', 'client_name', 'invoice_amount_total', 'category',
+        'send', 'signed', 'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
@@ -123,7 +124,7 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     fields = (
         'signed_file', 'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
-        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total'
+        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
     )
     list_editable = ('send', 'signed')
 
@@ -178,6 +179,18 @@ class PaymentInformationAdmin(nested_admin.NestedModelAdmin):  # noqa
     }
 
 
+class CategoryAdmin(nested_admin.NestedModelAdmin):  # noqa
+    model = Category
+    list_display = ('name',)
+    search_fields = ('name',)
+    list_filter = ('name',)
+    fields = ('name',)
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
+
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
 admin.site.register(Offer, OfferAdmin)

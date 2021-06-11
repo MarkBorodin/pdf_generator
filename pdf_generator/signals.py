@@ -52,6 +52,7 @@ def invoice_update(sender, instance, created, **kwargs):
         invoice.mwst = instance.get_mwst()
         invoice.invoice_amount_total = instance.get_invoice_amount_total()
         invoice.create_date = instance.create_date
+        invoice.category = instance.category
         invoice.save()
 
 
@@ -72,4 +73,12 @@ def offer_confirmation_update(sender, instance, created, **kwargs):
         offer_confirmation.mwst = instance.get_mwst()
         offer_confirmation.invoice_amount_total = instance.get_invoice_amount_total()
         offer_confirmation.create_date = instance.create_date
+        offer_confirmation.category = instance.category
         offer_confirmation.save()
+
+
+@receiver(post_save, sender=Designation)
+def offer_total_price(sender, instance, created, **kwargs):
+    offer = Offer.objects.get(number=instance.phase.page.offer.number)
+    offer.price = offer.get_netto_price() + offer.get_mwst()
+    offer.save()

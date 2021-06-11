@@ -46,7 +46,8 @@ class GetPDF(PDFTemplateView):
                 'netto_price': offer.get_netto_price(),
                 'mwst': offer.get_mwst(),
                 'invoice_amount_total': offer.get_invoice_amount_total(),
-                'create_date': offer.create_date
+                'create_date': offer.create_date,
+                'category': offer.category
             }
         )
 
@@ -69,7 +70,8 @@ class GetPDF(PDFTemplateView):
                 'netto_price': offer.get_netto_price(),
                 'mwst': offer.get_mwst(),
                 'invoice_amount_total': offer.get_invoice_amount_total(),
-                'create_date': offer.create_date
+                'create_date': offer.create_date,
+                'category': offer.category
             }
         )
 
@@ -188,7 +190,8 @@ def create_update_invoice(request, id): # noqa
             'netto_price': offer.get_netto_price(),
             'mwst': offer.get_mwst(),
             'invoice_amount_total': offer.get_invoice_amount_total(),
-            'create_date': offer.create_date
+            'create_date': offer.create_date,
+            'category': offer.category
         }
     )
 
@@ -219,7 +222,8 @@ def create_update_offer_confirmation(request, id): # noqa
             'netto_price': offer.get_netto_price(),
             'mwst': offer.get_mwst(),
             'invoice_amount_total': offer.get_invoice_amount_total(),
-            'create_date': offer.create_date
+            'create_date': offer.create_date,
+            'category': offer.category
         }
     )
 
