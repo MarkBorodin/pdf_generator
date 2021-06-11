@@ -43,8 +43,11 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         'number', 'create_date', 'client_name', 'amount_total', 'category',
         'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
-    search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
-    list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description')
+    search_fields = (
+        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
+        'category__name'
+    )
+    list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
         'signature', 'category'
@@ -91,9 +94,9 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
-        'sent', 'paid',
+        'sent', 'paid', 'category__name'
                      )
-    list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'sent', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
         'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
@@ -141,10 +144,10 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
-        'sent', 'signed',
+        'sent', 'signed', 'category__name'
                      )
     list_filter = (
-        'sent', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description'
+        'sent', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category'
     )
     fields = (
         'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
