@@ -1,3 +1,4 @@
+admin-totals==1.0.1
 amqp==5.0.2
 appdirs==1.4.4
 arabic-reshaper==2.1.1

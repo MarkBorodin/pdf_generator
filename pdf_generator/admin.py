@@ -1,5 +1,6 @@
 import nested_admin
 from django.contrib import admin
+from django.db.models import Sum
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -39,7 +40,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Offer
     inlines = [PageInline]
     list_display = (
-        'number', 'create_date', 'client_name', 'price', 'category',
+        'number', 'create_date', 'client_name', 'amount_total', 'category',
         'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = ('number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description')
@@ -53,6 +54,9 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
     }
 
+    def amount_total(self, obj):
+        amount_total = obj.get_invoice_amount_total()
+        return amount_total
 
     def get_pdf_offer(self, obj): # noqa
         return mark_safe(
@@ -83,18 +87,38 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Invoice
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'invoice_amount_total', 'category',
-        'send', 'paid', 'view_pdf_invoice', 'get_pdf_invoice'
+        'sent', 'paid', 'view_pdf_invoice', 'get_pdf_invoice'
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
-        'send', 'paid',
+        'sent', 'paid',
                      )
-    list_filter = ('send', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description')
+    list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description')
     fields = (
-        'send', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
+        'sent', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
         'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
     )
-    list_editable = ('send', 'paid',)
+    list_editable = ('sent', 'paid',)
+
+    change_list_template = 'admin/pdf_generator/invoice/change_list.html'
+
+    @staticmethod
+    def get_sum_open_sent_paid():
+        sum_open_sent_paid = dict()
+        invoices = Invoice.objects.all()
+        sum_open_sent_paid['sum_open_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices])
+        sum_open_sent_paid['sum_sent_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent]) # noqa
+        sum_open_sent_paid['sum_paid_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid]) # noqa
+        return sum_open_sent_paid
+
+    def changelist_view(self, request, extra_context=None):
+        sum_open_sent_paid = self.get_sum_open_sent_paid()
+        my_context = {
+            'open': sum_open_sent_paid['sum_open_invoices'],
+            'sent': sum_open_sent_paid['sum_sent_invoices'],
+            'paid': sum_open_sent_paid['sum_paid_invoices'],
+        }
+        return super(InvoiceAdmin, self).changelist_view(request, extra_context=my_context)
 
     def get_pdf_invoice(self, obj):  # noqa
         return mark_safe(
@@ -113,20 +137,20 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = OfferConfirmation
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'invoice_amount_total', 'category',
-        'send', 'signed', 'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
+        'sent', 'signed', 'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
-        'send', 'signed',
+        'sent', 'signed',
                      )
     list_filter = (
-        'send', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description'
+        'sent', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description'
     )
     fields = (
-        'signed_file', 'send', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
+        'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
         'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
     )
-    list_editable = ('send', 'signed')
+    list_editable = ('sent', 'signed')
 
     def view_pdf_offer_confirmation(self, obj): # noqa
         return mark_safe(

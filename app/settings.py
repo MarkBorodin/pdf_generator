@@ -29,7 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'pdf_generator',
+
     'wkhtmltopdf',
     'nested_admin',
 ]

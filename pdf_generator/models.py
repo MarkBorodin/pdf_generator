@@ -99,7 +99,8 @@ class Offer(BaseModel):
         return self.mwst
 
     def get_invoice_amount_total(self):
-        self.invoice_amount_total = self.netto_price + self.mwst
+        # self.invoice_amount_total = self.netto_price + self.mwst
+        self.invoice_amount_total = self.get_netto_price() + self.get_mwst()
         self.invoice_amount_total = float('{:.1f}'.format(self.invoice_amount_total))
         return self.invoice_amount_total
 
@@ -152,7 +153,7 @@ class Invoice(BaseModel):
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.IntegerField(null=True)
-    send = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
     category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
 
@@ -180,7 +181,7 @@ class OfferConfirmation(BaseModel):
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.IntegerField(null=True)
-    send = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
     signed = models.BooleanField(default=False)
     signed_file = models.FileField(null=True)
     category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
