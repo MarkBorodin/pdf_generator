@@ -1,6 +1,7 @@
+import math
+
 import nested_admin
 from django.contrib import admin
-from django.db.models import Sum
 from django.forms import Textarea
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -58,7 +59,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     }
 
     def amount_total(self, obj):
-        amount_total = obj.get_invoice_amount_total()
+        amount_total = math.floor(obj.get_invoice_amount_total())
         return amount_total
 
     def get_pdf_offer(self, obj): # noqa

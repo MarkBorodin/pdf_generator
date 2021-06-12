@@ -34,54 +34,6 @@ class GetPDF(PDFTemplateView):
         context['invoice'] = invoice
         offer_confirmation = OfferConfirmation.objects.filter(offer=offer, number=offer.number).first()
         context['offer_confirmation'] = offer_confirmation
-        #
-        # invoice = Invoice.objects.update_or_create(
-        #     offer=offer,
-        #     number=offer.number,
-        #     defaults={
-        #         'client_address': offer.client_address,
-        #         'client_name': offer.client_name,
-        #         'email': offer.email,
-        #         'description': offer.description,
-        #         'iban': offer.payment_information.iban,
-        #         'bic_swift': offer.payment_information.bic_swift,
-        #         'kontonummer': offer.payment_information.kontonummer,
-        #         'bemerkung': offer.bemerkung,
-        #         'zahlbar_bis': offer.create_date + timedelta(days=30),
-        #         'netto_price': offer.get_netto_price(),
-        #         'mwst': offer.get_mwst(),
-        #         'invoice_amount_total': offer.get_invoice_amount_total(),
-        #         'create_date': offer.create_date,
-        #         'category': offer.category
-        #     }
-        # )
-        #
-        # invoice[0].save()
-        # context['invoice'] = invoice[0]
-        #
-        # offer_confirmation = OfferConfirmation.objects.update_or_create(
-        #     offer=offer,
-        #     number=offer.number,
-        #     defaults={
-        #         'client_address': offer.client_address,
-        #         'client_name': offer.client_name,
-        #         'email': offer.email,
-        #         'description': offer.description,
-        #         'iban': offer.payment_information.iban,
-        #         'bic_swift': offer.payment_information.bic_swift,
-        #         'kontonummer': offer.payment_information.kontonummer,
-        #         'bemerkung': offer.bemerkung,
-        #         'zahlbar_bis': offer.create_date + timedelta(days=30),
-        #         'netto_price': offer.get_netto_price(),
-        #         'mwst': offer.get_mwst(),
-        #         'invoice_amount_total': offer.get_invoice_amount_total(),
-        #         'create_date': offer.create_date,
-        #         'category': offer.category
-        #     }
-        # )
-        #
-        # offer_confirmation[0].save()
-        # context['offer_confirmation'] = offer_confirmation[0]
 
         if context['number_of_pages'] == 1:
 
