@@ -53,49 +53,53 @@ class Category(BaseModel):
 
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# class Template(BaseModel):
-#     number = models.IntegerField(primary_key=True)
-#     client_address = models.TextField(max_length=512, null=True)
-#     client_name = models.TextField(max_length=128, null=True)
-#     email = models.EmailField(null=True)
-#     description = models.TextField(max_length=512, null=True)
-#     signature = models.ForeignKey(to=Signature, null=True, related_name='templates', on_delete=models.SET_NULL)
-#     payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='templates', on_delete=models.SET_NULL) # noqa
-#     category = models.ForeignKey(to=Category, null=True, related_name='templates', on_delete=models.SET_NULL)
-#     bemerkung = models.TextField(max_length=512, null=True, blank=True)
-#     price = models.IntegerField(null=True, blank=True)
-#
-#     class Meta:
-#         ordering = ["-create_date"]
-#         verbose_name = "Offerte"
-#         verbose_name_plural = "Offerten"
-#
-#     def __str__(self):
-#         return f'{self.number}'
-#
-#     def save(self, *args, **kwargs):
-#         if self.number is None:
-#             self.number = \
-#                 str(datetime.datetime.now().year)\
-#                 + str(datetime.datetime.now().month)\
-#                 + str(datetime.datetime.now().hour)\
-#                 + str(datetime.datetime.now().minute)
-#             if len(self.number) == 8:
-#                 self.number += '0'
-#         super(self.__class__, self).save(*args, **kwargs)
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-class Offer(BaseModel):
+class Template(BaseModel):
     number = models.IntegerField(primary_key=True)
     client_address = models.TextField(max_length=512, null=True)
     client_name = models.TextField(max_length=128, null=True)
     email = models.EmailField(null=True)
     description = models.TextField(max_length=512, null=True)
-    signature = models.ForeignKey(to=Signature, null=True, related_name='offers', on_delete=models.SET_NULL)
-    payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='offers', on_delete=models.SET_NULL) # noqa
-    category = models.ForeignKey(to=Category, null=True, related_name='offers', on_delete=models.SET_NULL)
+    signature = models.ForeignKey(to=Signature, null=True, related_name='templates', on_delete=models.SET_NULL)
+    payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='templates', on_delete=models.SET_NULL) # noqa
+    category = models.ForeignKey(to=Category, null=True, related_name='templates', on_delete=models.SET_NULL)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
+    name = models.TextField(max_length=512, null=False, unique=True)
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Vorlage"
+        verbose_name_plural = "Vorlagen"
+
+    def __str__(self):
+        return f'{self.name}'
+
+    def save(self, *args, **kwargs):
+        if self.number is None:
+            self.number = \
+                str(datetime.datetime.now().year)\
+                + str(datetime.datetime.now().month)\
+                + str(datetime.datetime.now().hour)\
+                + str(datetime.datetime.now().minute)
+            if len(self.number) == 8:
+                self.number += '0'
+        super(self.__class__, self).save(*args, **kwargs)
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+class Offer(BaseModel):
+    number = models.IntegerField(primary_key=True)
+    client_address = models.TextField(max_length=512, null=True, blank=True)
+    client_name = models.TextField(max_length=128, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    description = models.TextField(max_length=512, null=True, blank=True)
+    signature = models.ForeignKey(to=Signature, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
+    payment_information = models.ForeignKey(to=PaymentInformation, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL) # noqa
+    category = models.ForeignKey(to=Category, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    template = models.ForeignKey(to=Template, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     class Meta:
         ordering = ["-create_date"]
@@ -114,6 +118,18 @@ class Offer(BaseModel):
                 + str(datetime.datetime.now().minute)
             if len(self.number) == 8:
                 self.number += '0'
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if self.template is not None:
+            template = Template.objects.get(name=self.template.name)
+            self.client_address = template.client_address
+            self.client_name = template.client_name
+            self.email = template.email
+            self.description = template.description
+            self.signature = template.signature
+            self.payment_information = template.payment_information
+            self.category = template.category
+            self.bemerkung = template.bemerkung
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_netto_price(self):

@@ -7,8 +7,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
-from .models import Category, Designation, Offer, Page, Phase, models, Invoice,\
-    OfferConfirmation, Signature, PaymentInformation
+from .models import Category, Designation, Offer, Page, Phase, models, Invoice, \
+    OfferConfirmation, Signature, PaymentInformation, Template
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
@@ -50,7 +50,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
+        'template', 'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
         'signature', 'category'
     )
     formfield_overrides = {
@@ -218,9 +218,32 @@ class CategoryAdmin(nested_admin.NestedModelAdmin):  # noqa
     }
 
 
+class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
+    model = Template
+    # inlines = [PageInline]
+    list_display = (
+        'name', 'number', 'create_date', 'client_name', 'category',
+        # 'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
+    )
+    search_fields = (
+        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
+        'category__name'
+    )
+    list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
+    fields = (
+        'name', 'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
+        'signature', 'category'
+    )
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
+        models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
+admin.site.register(Template, TemplateAdmin)
