@@ -92,14 +92,17 @@ def offer_confirmation_update(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Designation)
 @receiver(post_save, sender=Designation)
 def update_invoice_offer_confirmation(sender, instance, **kwargs):
-    if sender is Designation:
-        offer = Offer.objects.get(number=instance.phase.page.offer.number)
-    elif sender is Phase:
-        offer = Offer.objects.get(number=instance.page.offer.number)
-    elif sender is Page:
-        offer = Offer.objects.get(number=instance.offer.number)
-    elif sender is Offer:
-        offer = Offer.objects.get(number=instance.number)
+    try:
+        if sender is Designation:
+            offer = Offer.objects.get(number=instance.phase.page.offer.number)
+        elif sender is Phase:
+            offer = Offer.objects.get(number=instance.page.offer.number)
+        elif sender is Page:
+            offer = Offer.objects.get(number=instance.offer.number)
+        elif sender is Offer:
+            offer = Offer.objects.get(number=instance.number)
+    except Exception as e:
+        print(e)
     try:
         invoice = Invoice.objects.get(offer=offer, number=offer.number)
         invoice.client_address = offer.client_address

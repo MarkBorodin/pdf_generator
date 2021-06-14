@@ -58,7 +58,13 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         models.EmailField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
     }
 
-    def amount_total(self, obj):
+    def get_readonly_fields(self, request, obj=None): # noqa
+        if obj:
+            return 'template'
+        else:
+            return []
+
+    def amount_total(self, obj):  # noqa
         amount_total = math.floor(obj.get_invoice_amount_total())
         return amount_total
 
@@ -220,10 +226,9 @@ class CategoryAdmin(nested_admin.NestedModelAdmin):  # noqa
 
 class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Template
-    # inlines = [PageInline]
+    inlines = [PageInline]
     list_display = (
         'name', 'number', 'create_date', 'client_name', 'category',
-        # 'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',

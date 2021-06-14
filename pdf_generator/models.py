@@ -52,7 +52,6 @@ class Category(BaseModel):
         return f'{self.name}'
 
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class Template(BaseModel):
     number = models.IntegerField(primary_key=True)
     client_address = models.TextField(max_length=512, null=True)
@@ -84,7 +83,6 @@ class Template(BaseModel):
             if len(self.number) == 8:
                 self.number += '0'
         super(self.__class__, self).save(*args, **kwargs)
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 class Offer(BaseModel):
@@ -97,9 +95,7 @@ class Offer(BaseModel):
     payment_information = models.ForeignKey(to=PaymentInformation, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL) # noqa
     category = models.ForeignKey(to=Category, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     template = models.ForeignKey(to=Template, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     class Meta:
         ordering = ["-create_date"]
@@ -115,10 +111,12 @@ class Offer(BaseModel):
                 str(datetime.datetime.now().year)\
                 + str(datetime.datetime.now().month)\
                 + str(datetime.datetime.now().hour)\
-                + str(datetime.datetime.now().minute)
-            if len(self.number) == 8:
-                self.number += '0'
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                + str(datetime.datetime.now().minute) \
+                + str(datetime.datetime.now().second)
+            if len(self.number) > 9:
+                self.number = self.number[2:]
+                if len(self.number) == 8:
+                    self.number = self.number + '0'
         if self.template is not None:
             template = Template.objects.get(name=self.template.name)
             self.client_address = template.client_address
@@ -129,7 +127,38 @@ class Offer(BaseModel):
             self.payment_information = template.payment_information
             self.category = template.category
             self.bemerkung = template.bemerkung
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            pages = Page.objects.filter(template=template.number)
+
+            for page in pages:
+                page_new = Page.objects.create(
+                    offer=self,
+                    number=page.number
+                )
+                page_new.save()
+                phases = Phase.objects.filter(page=page.id)
+
+                for phase in phases:
+                    phase_new = Phase.objects.create(
+                        page=page_new,
+                        name=phase.name,
+                        number=phase.number
+                    )
+                    phase_new.save()
+                    designations = Designation.objects.filter(phase=phase.id)
+
+                    for designation in designations:
+                        designation_new = Designation.objects.create(
+                            phase=phase_new,
+                            name=designation.name,
+                            description=designation.description,
+                            price=designation.price,
+                            quantity=designation.quantity,
+                            number=designation.number
+                        )
+                        designation_new.save()
+
+        self.template = None
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_netto_price(self):
@@ -154,7 +183,8 @@ class Offer(BaseModel):
 
 
 class Page(BaseModel):
-    offer = models.ForeignKey(to=Offer, related_name='pages', on_delete=models.CASCADE)
+    offer = models.ForeignKey(to=Offer, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
+    template = models.ForeignKey(to=Template, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
     number = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 
     def __str__(self):
