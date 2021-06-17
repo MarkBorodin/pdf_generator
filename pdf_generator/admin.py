@@ -35,6 +35,7 @@ class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
     model = Page
     inlines = [PhaseInline]
     extra = 0
+    readonly_fields = ('offer', 'template')
 
 
 class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
@@ -50,7 +51,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'template', 'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
+        'template', 'client_name', 'client_address', 'email', 'description', 'bemerkung', 'payment_information',
         'signature', 'category'
     )
     formfield_overrides = {
@@ -236,7 +237,7 @@ class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'name', 'client_address', 'client_name', 'email', 'description', 'bemerkung', 'payment_information',
+        'name', 'client_name', 'client_address', 'email', 'description', 'bemerkung', 'payment_information',
         'signature', 'category'
     )
     formfield_overrides = {
