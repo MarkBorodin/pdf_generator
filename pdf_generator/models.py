@@ -154,7 +154,8 @@ class Offer(BaseModel):
                             description=designation.description,
                             price=designation.price,
                             quantity=designation.quantity,
-                            number=designation.number
+                            number=designation.number,
+                            nach_aufwand=designation.nach_aufwand
                         )
                         designation_new.save()
 
@@ -176,7 +177,6 @@ class Offer(BaseModel):
         return self.mwst
 
     def get_invoice_amount_total(self):
-        # self.invoice_amount_total = self.netto_price + self.mwst
         self.invoice_amount_total = self.get_netto_price() + self.get_mwst()
         self.invoice_amount_total = float('{:.1f}'.format(self.invoice_amount_total))
         return self.invoice_amount_total
@@ -205,8 +205,9 @@ class Designation(BaseModel):
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=512, null=True)
     price = models.FloatField(null=False, blank=False, default=0)
-    quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
+    quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
+    nach_aufwand = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'

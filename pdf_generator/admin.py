@@ -13,11 +13,11 @@ from .models import Category, Designation, Offer, Page, Phase, models, Invoice, 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
     model = Designation
-    fields = ('name', 'description', 'price', 'quantity')
+    fields = ('name', 'description', 'nach_aufwand', 'price', 'quantity')
     show_change_link = True
     extra = 0
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 70})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 50})},
     }
 
 

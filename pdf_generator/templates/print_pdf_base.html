@@ -542,11 +542,11 @@ position: absolute;
 				<TD rowspan=2 class="tr18 td0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
 				<TD class="tr18 td1"><P class="p2_222 ft20">{{ designation.name }}</P></TD>
 				<TD class="tr18 td2"><P class="p2_222 ft2">&nbsp</P></TD>
-				<TD rowspan=2 class="tr18 td3"><P class="p2_2222 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
-				<TD rowspan=2 class="tr18 td4"><P class="p10_10 ft19">{{ designation.price|floatformat:2|prices_format  }}</P></TD>
-				<TD rowspan=2 class="tr18 td5"><P class="p13_13 ft19">{{ designation.quantity }}</P></TD>
-				<TD rowspan=2 class="tr18 td15"><P class="p3_3 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
-				<TD rowspan=2 class="tr18 td16"><P class="p12_12 ft19">{{ designation.get_subtotal|myround|floatformat:2|prices_format }}</P></TD>
+				<TD rowspan=2 class="tr18 td3"><P class="p2_2222 ft19">{% if designation.nach_aufwand %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}{% endif %}</P></TD>
+				<TD rowspan=2 class="tr18 td4"><P class="p10_10 ft19">{% if designation.nach_aufwand %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% else %}{{ designation.price|floatformat:2|prices_format  }}{% endif %}</P></TD>
+				<TD rowspan=2 class="tr18 td5"><P class="p13_13 ft19">{% if designation.nach_aufwand %}nach Aufwand{% else %}{{designation.quantity}}{% endif %}</P></TD>
+				<TD rowspan=2 class="tr18 td15"><P class="p3_3 ft19">{% if designation.nach_aufwand %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}{% endif %}</P></TD>
+				<TD rowspan=2 class="tr18 td16"><P class="p12_12 ft19">{% if designation.nach_aufwand %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% else %}{{ designation.get_subtotal|myround|floatformat:2|prices_format }}{% endif %}</P></TD>
 			</TR>
 			<TR>
 				<TD colspan=2 class="tr4 td24"><P class="p2_2 ft6">{{ designation.description }}</P></TD>

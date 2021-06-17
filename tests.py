@@ -324,7 +324,7 @@ class TestBasic(object):
             print(f'check_designations_price: {e}')
 
         try:
-            if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-quantity').get_attribute('value') == '1' + self.designations_quantity: # noqa
+            if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-quantity').get_attribute('value') == self.designations_quantity + '0': # noqa
                 self.check_designations_quantity = True
             else:
                 self.check_designations_quantity = False
