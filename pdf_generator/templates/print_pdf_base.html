@@ -96,9 +96,11 @@ position: absolute;
 .p000{position:absolute; text-align: left;padding-left: 93px;margin-top: 69px;margin-bottom: 0px;}
 .p1{text-align: left;padding-left: 73px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2{text-align: right;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p2_z{text-align: left;margin-right: 0px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p2_x{text-align: left;margin-right: 50px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_0{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_2{text-align: left;margin-top: 0px;margin-bottom: 20px;}
-.p2_22{text-align: left;margin-top: 30px;margin-bottom: 0px;}
+.p2_22{text-align: left;margin-top: 35px;margin-bottom: -8px;}
 .p2_222{text-align: left;margin-top: 0px;margin-bottom: 3px;}
 .p2_2222{text-align: left;margin-top: 0px;margin-bottom: 30px;}
 .p3{text-align: left;padding-left: 1px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
@@ -120,12 +122,15 @@ position: absolute;
 .p9{text-align: left;padding-left: 71px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p9_9{text-align: left;padding-left: 71px;margin-top: 0px;margin-bottom: 35px;white-space: nowrap;}
 .p10{text-align: right;padding-right: 38px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-.p10_10{text-align: right;padding-right: 38px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
+.p10_x{text-align: left;padding-right: 38px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p10_10{text-align: left;padding-right: 38px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
 .p11{text-align: center;padding-right: 37px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p11_x{text-align: left;padding-right: 37px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p12{text-align: right;padding-right: 48px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-.p12_12{text-align: right;padding-right: 48px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
+.p12_x{text-align: left;padding-right: 48px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p12_12{text-align: left;padding-right: 48px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
 .p13{text-align: center;padding-right: 36px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-.p13_13{text-align: center;padding-right: 36px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
+.p13_13{text-align: left;padding-right: 36px;margin-top: 0px;margin-bottom: 30px;white-space: nowrap;}
 .p14{text-align: left;padding-left: 117px;margin-top: 0px;margin-bottom: 0px;}
 .p15{text-align: left;padding-right: 127px;margin-top: 0px;margin-bottom: 0px;}
 .p15_5{text-align: left;padding-left: 0px;margin-top: 95px;margin-bottom: 0px; margin-left: 296px}
@@ -187,7 +192,7 @@ position: absolute;
 .tr10{height: 30px;}
 .tr11{height: 4px;}
 .tr12{height: 3px;}
-.tr13{height: 16px;}
+.tr13{height: 25px;}
 .tr14{height: 6px;}
 .tr15{height: 10px;}
 .tr16{height: 39px;}
@@ -241,9 +246,9 @@ position: absolute;
 	{% define invoice.kontonummer as kontonummer %}
 	{% define invoice.bemerkung as bemerkung %}
 	{% define invoice.zahlbar_bis as zahlbar_bis %}
-	{% define invoice.netto_price as netto_price %}
-	{% define invoice.mwst as mwst %}
-	{% define invoice.invoice_amount_total as invoice_amount_total %}
+	{% define netto_price as netto_price %}
+	{% define mwst as mwst %}
+	{% define invoice_amount_total as invoice_amount_total %}
 	{% define invoice.create_date as create_date %}
 	{% define invoice.number as number %}
 	{% define invoice.offer.pages.all as pages %}
@@ -265,9 +270,9 @@ position: absolute;
 	{% define offer_confirmation.kontonummer as kontonummer %}
 	{% define offer_confirmation.bemerkung as bemerkung %}
 	{% define offer_confirmation.zahlbar_bis as zahlbar_bis %}
-	{% define offer_confirmation.netto_price as netto_price %}
-	{% define offer_confirmation.mwst as mwst %}
-	{% define offer_confirmation.invoice_amount_total as invoice_amount_total %}
+	{% define netto_price as netto_price %}
+	{% define mwst as mwst %}
+	{% define invoice_amount_total as invoice_amount_total %}
 	{% define offer_confirmation.create_date as create_date %}
 	{% define offer_confirmation.number as number %}
 	{% define offer_confirmation.offer.pages.all as pages %}
@@ -521,12 +526,12 @@ position: absolute;
 		</TR>
 		<TR>
 			<TD class="tr10 td0"><P class="p9 ft4">POS.</P></TD>
-			<TD colspan=2 class="tr10 td24"><P class="p2 ft4">BEZEICHNUNG</P></TD>
-			<TD class="tr10 td3"><P class="p2 ft2">&nbsp;</P></TD>
-			<TD class="tr10 td4"><P class="p10 ft5">STK. PREIS</P></TD>
-			<TD class="tr10 td5"><P class="p11 ft4">MENGE</P></TD>
-			<TD class="tr10 td15"><P class="p2 ft2">&nbsp;</P></TD>
-			<TD class="tr10 td16"><P class="p12 ft17">SUBTOTAL</P></TD>
+			<TD colspan=2 class="tr10 td24"><P class="p2_x ft4">BEZEICHNUNG</P></TD>
+			<TD class="tr10 td3"><P class="p2_x ft2">&nbsp;</P></TD>
+			<TD class="tr10 td4"><P class="p10_x ft5">STK. PREIS</P></TD>
+			<TD class="tr10 td5"><P class="p11_x ft4">MENGE</P></TD>
+			<TD class="tr10 td15"><P class="p2_x ft2">&nbsp;</P></TD>
+			<TD class="tr10 td16"><P class="p12_x ft17">SUBTOTAL</P></TD>
 		</TR>
 		<TR>
 			<TD class="tr17 td17"><P class="p2 ft18">&nbsp;</P></TD>
@@ -617,13 +622,13 @@ position: absolute;
 				<TABLE cellpadding=0 cellspacing=0 class="t1">
 					<TR>
 						<TD class="tr0 td35"><P class="p2_0 ft19">Nettopreis</P></TD>
-						<TD class="tr0 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
-						<TD class="tr0 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ netto_price|myround|floatformat:2|prices_format }}</P></TD>
+						<TD class="tr0 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
+						<TD class="tr0 td37"><P class="p2_z ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ netto_price|myround|floatformat:2|prices_format }}</P></TD>
 					</TR>
 					<TR>
 						<TD class="tr20 td35"><P class="p2 ft19">MwSt. 7,7%</P></TD>
-						<TD class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
-						<TD class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ mwst|myround|floatformat:2|prices_format }}</P></TD>
+						<TD class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
+						<TD class="tr20 td37"><P class="p2_z ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ mwst|myround|floatformat:2|prices_format }}</P></TD>
 					</TR>
 				</TABLE>
 
@@ -631,8 +636,8 @@ position: absolute;
 					<TR>
 						<TD class="tr13 td38"></TD>
 						<TD class="tr13 td35"><P class="p2_22 ft19">Gesammttotal</P></TD>
-						<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
-						<TD rowspan=2 class="tr20 td37"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total|myround|floatformat:2|prices_format }}</P></TD>
+						<TD rowspan=2 class="tr20 td36"><P class="p2 ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}</P></TD>
+						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ invoice_amount_total|myround|floatformat:2|prices_format }}</P></TD>
 					</TR>
 					<TR>
 						<TD class="tr21 td38"></TD>

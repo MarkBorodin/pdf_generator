@@ -10,6 +10,10 @@ from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, Offer
 from pdf_generator.utils import remove_blank_page
 
 
+import logging
+logger = logging.getLogger("mylogger")
+
+
 class GetPDF(PDFTemplateView):
     """get or see pdf file"""
     pk_url_kwarg = 'id'
