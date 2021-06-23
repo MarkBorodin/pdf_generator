@@ -5,10 +5,13 @@
     <P class="p000 ft00">AUFTRAGSBESTÄTIGUNG</P>
 {% endblock %}
 
+{% block Rechnungsbetrag %}
+{% endblock %}
+
 {% block above_signature %}
     <P class="p15 ft23"></P>
     <DIV id="id1_2_1">
-        <P class="p15 ft23">Wir bedanken uns für den Auftrag und freuen uns auf eine erfolgreiche Zusammenarbeit. Bitte senden Sie dieses Dokument gegengezeichnet an uns zuruck.</P>
+        <P class="p15 ft23">{{schlusstext}}</P>
         <P class="p16 ft6">Herzliche Grüsse&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bestätigt:</P>
         <P class="p15_5 ft23">{{ client_name }}</P>
         <P class="p15_55 ft23">(Signatur, Ort & Datum)</P>

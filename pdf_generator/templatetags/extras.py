@@ -11,10 +11,10 @@ register.filter('myround', myround)
 
 
 def prices_format(x):
-    x_str = x.split(sep='.')[0]
+    x_str, float_part = x.split(sep='.')[0], x.split(sep='.')[1]
     if len(x_str) > 3:
         x_str = x_str[:-3] + '’' + x_str[-3:]
-        return x_str
+        return f'{x_str}.{float_part}'
     else:
         return x
 

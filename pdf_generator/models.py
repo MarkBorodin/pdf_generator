@@ -3,6 +3,10 @@ import datetime
 from django.db import models
 
 
+SCHLUSSTEXT = """Wir bedanken uns für den Auftrag und freuen uns auf eine erfolgreiche Zusammenarbeit. 
+Bitte senden Sie dieses Dokument gegengezeichnet an uns uruck."""
+
+
 class BaseModel(models.Model):
     class Meta:
         abstract = True
@@ -264,6 +268,7 @@ class OfferConfirmation(BaseModel):
     signed = models.BooleanField(default=False)
     signed_file = models.FileField(null=True)
     category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
+    schlusstext = models.TextField(max_length=512, null=True, blank=True, default=SCHLUSSTEXT)
 
     class Meta:
         ordering = ["-create_date"]

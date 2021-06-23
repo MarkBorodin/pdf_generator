@@ -159,7 +159,8 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     fields = (
         'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
-        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
+        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
+        'schlusstext'
     )
     list_editable = ('sent', 'signed')
 
