@@ -117,8 +117,8 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     def get_sum_open_sent_paid():
         sum_open_sent_paid = dict()
         invoices = Invoice.objects.all()
-        sum_open_sent_paid['sum_open_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices])
-        sum_open_sent_paid['sum_sent_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent]) # noqa
+        sum_open_sent_paid['sum_open_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if not invoice.sent and not invoice.paid]) # noqa
+        sum_open_sent_paid['sum_sent_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent and not invoice.paid]) # noqa
         sum_open_sent_paid['sum_paid_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid]) # noqa
         return sum_open_sent_paid
 
