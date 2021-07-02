@@ -17,7 +17,7 @@ class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): 
     show_change_link = True
     extra = 0
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 50})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 55})},
     }
 
 
