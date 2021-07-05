@@ -8,12 +8,12 @@ from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
 from .models import Category, Designation, Offer, Page, Phase, models, Invoice, \
-    OfferConfirmation, Signature, PaymentInformation, Template
+    OfferConfirmation, Signature, PaymentInformation, Template, HourlyRate
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
     model = Designation
-    fields = ('name', 'description', 'nach_aufwand', 'price', 'quantity')
+    fields = ('name', 'description', 'nach_aufwand', 'price', 'number_of_hours', 'quantity')
     show_change_link = True
     extra = 0
     formfield_overrides = {
@@ -116,13 +116,13 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     @staticmethod
     def get_sum_open_sent_paid():
         sum_open_sent_paid = dict()
-        invoices = Invoice.objects.all()
+        invoices = Invoice.objects.all() # noqa
         sum_open_sent_paid['sum_open_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if not invoice.sent and not invoice.paid]) # noqa
         sum_open_sent_paid['sum_sent_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent and not invoice.paid]) # noqa
         sum_open_sent_paid['sum_paid_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid]) # noqa
         return sum_open_sent_paid
 
-    def changelist_view(self, request, extra_context=None):
+    def changelist_view(self, request, extra_context=None): # noqa
         sum_open_sent_paid = self.get_sum_open_sent_paid()
         my_context = {
             'open': sum_open_sent_paid['sum_open_invoices'],
@@ -254,3 +254,4 @@ admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
 admin.site.register(Template, TemplateAdmin)
+admin.site.register(HourlyRate)

@@ -26,7 +26,8 @@ class TestBasic(object):
     check_phase_name = None
     check_designations_name = None
     check_designations_description = None
-    check_designations_price = None
+    # check_designations_price = None
+    check_designations_number_of_hours = None
     check_designations_quantity = None
     create_by_template = None
 
@@ -43,8 +44,9 @@ class TestBasic(object):
     phase = ''
     designations_name = 'designations_name_1'
     designations_description = 'designations_description_1'
-    designations_price = '1000'
+    # designations_price = '1000'
     designations_quantity = '1'
+    designations_number_of_hours = '1'
     number = None
     link = None
     offer_number_created_by_template = None
@@ -144,7 +146,8 @@ class TestBasic(object):
             time.sleep(self.sleep)
             self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-description').send_keys(self.designations_description) # noqa
             time.sleep(self.sleep)
-            self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').send_keys(self.designations_price) # noqa
+            # self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').send_keys(self.designations_price) # noqa
+            self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-number_of_hours').send_keys(self.designations_number_of_hours) # noqa
             time.sleep(self.sleep)
             self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-quantity').send_keys(self.designations_quantity) # noqa
             time.sleep(self.sleep)
@@ -315,13 +318,21 @@ class TestBasic(object):
         except Exception as e:
             print(f'check_designations_description: {e}')
 
+        # try:
+        #     if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').get_attribute('value') == self.designations_price + '0.0': # noqa
+        #         self.check_designations_price = True
+        #     else:
+        #         self.check_designations_price = False
+        # except Exception as e:
+        #     print(f'check_designations_price: {e}')
+
         try:
-            if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').get_attribute('value') == self.designations_price + '0.0': # noqa
-                self.check_designations_price = True
+            if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-number_of_hours').get_attribute('value') == self.designations_number_of_hours + '0': # noqa
+                self.check_designations_number_of_hours = True
             else:
-                self.check_designations_price = False
+                self.check_designations_number_of_hours = False
         except Exception as e:
-            print(f'check_designations_price: {e}')
+            print(f'check_designations_number_of_hours: {e}')
 
         try:
             if self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-quantity').get_attribute('value') == self.designations_quantity + '0': # noqa
@@ -398,7 +409,8 @@ class TestBasic(object):
             time.sleep(self.sleep)
             self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-description').send_keys(self.designations_description) # noqa
             time.sleep(self.sleep)
-            self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').send_keys(self.designations_price) # noqa
+            # self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-price').send_keys(self.designations_price) # noqa
+            self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-number_of_hours').send_keys(self.designations_number_of_hours) # noqa
             time.sleep(self.sleep)
             self.driver.find_element_by_id('id_pages-0-phases-0-designations-0-quantity').send_keys(self.designations_quantity) # noqa
             time.sleep(self.sleep)
@@ -455,7 +467,8 @@ class TestBasic(object):
         print(f'test__check_phase_name: {self.check_phase_name}')
         print(f'test_check_designations_name: {self.check_designations_name}')
         print(f'test_check_designations_description: {self.check_designations_description}')
-        print(f'test_check_designations_price: {self.check_designations_price}')
+        # print(f'test_check_designations_price: {self.check_designations_price}')
+        print(f'test_check_designations_number_of_hours: {self.check_designations_number_of_hours}')
         print(f'test_check_designations_quantity: {self.check_designations_quantity}')
 
     def results_invoice_create(self) -> None:

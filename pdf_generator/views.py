@@ -199,6 +199,6 @@ def view_signed_file(request, id): # noqa
         offer_confirmation = OfferConfirmation.objects.get(number=id)
         file = offer_confirmation.signed_file
         return FileResponse(file)
-    except Exception:
+    except Exception: # noqa
         response = HttpResponseNotFound('<h1>File not exist</h1>')
         return response

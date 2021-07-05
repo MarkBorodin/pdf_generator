@@ -15,6 +15,19 @@ class BaseModel(models.Model):
     write_date = models.DateTimeField(null=True, auto_now=True)
 
 
+class HourlyRate(BaseModel):
+    rate = models.FloatField(default=30, null=True)
+    name = models.TextField(max_length=256, null=True, blank=True)
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "hourly rate"
+        verbose_name_plural = "hourly rate"
+
+    def __str__(self):
+        return f'{self.name} {self.rate}'
+
+
 class Signature(BaseModel):
     image = models.ImageField()
     image_code = models.TextField(null=True)
@@ -158,6 +171,7 @@ class Offer(BaseModel):
                             description=designation.description,
                             price=designation.price,
                             quantity=designation.quantity,
+                            number_of_hours=designation.number_of_hours,
                             number=designation.number,
                             nach_aufwand=designation.nach_aufwand
                         )
@@ -171,7 +185,7 @@ class Offer(BaseModel):
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=self.number))
         )
 
-        self.netto_price = sum([designation.price * designation.quantity for designation in designations])
+        self.netto_price = sum([designation.price.rate * (designation.quantity * designation.number_of_hours) for designation in designations]) # noqa
         self.netto_price = float('{:.1f}'.format(self.netto_price))
         return self.netto_price
 
@@ -208,16 +222,22 @@ class Designation(BaseModel):
     phase = models.ForeignKey(to=Phase, related_name='designations', on_delete=models.CASCADE)
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=512, null=True)
-    price = models.FloatField(null=False, blank=False, default=0)
+    price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_NULL, null=True, blank=True) # noqa
     quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
+    number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
 
+    def save(self, *args, **kwargs):
+        if self.price is None:
+            self.price = HourlyRate.objects.all().last()
+        super(Designation, self).save(*args, **kwargs)
+
     def get_subtotal(self):
-        self.subtotal = self.price * self.quantity
+        self.subtotal = self.price.rate * (self.quantity * self.number_of_hours)
         return self.subtotal
 
 
