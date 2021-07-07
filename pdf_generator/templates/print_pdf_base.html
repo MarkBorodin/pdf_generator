@@ -99,6 +99,7 @@ position: absolute;
 .p2_y{text-align: left;margin-left: 300px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_z{text-align: left;margin-right: 0px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_x{text-align: center;margin-right: 50px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p2_xx{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_0{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p2_2{text-align: left;margin-top: 0px;margin-bottom: 20px;white-space: pre;}
 .p2_22{text-align: left;margin-top: 35px;margin-bottom: -8px;}
@@ -549,7 +550,7 @@ position: absolute;
 		</TR>
 		<TR>
 			<TD style="width:10%" class="tr10 td0"><P class="p9 ft4">POS.</P></TD>
-			<TD style="width:40%" colspan=2 class="tr10 td24"><P class="p2_x ft4">BEZEICHNUNG</P></TD>
+			<TD style="width:40%" colspan=2 class="tr10 td24"><P class="p2_xx ft4">BEZEICHNUNG</P></TD>
 			<TD style="width:10%" class="tr10 td3"><P class="p2_x ft2">&nbsp;</P></TD>
 			<TD style="width:10%" class="tr10 td4"><P class="p10_x ft5">ANZAHL H</P></TD>
 			<TD style="width:10%" class="tr10 td5"><P class="p11_x ft4">MENGE</P></TD>
@@ -572,7 +573,7 @@ position: absolute;
 				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
 				<TD colspan=2 class="tr18 td1_1"><P class="p2_222 ft20">{{ designation.name|safe }}</P></TD>
 <!--				<TD class="tr18 td2_2"><P class="p2 ft2"></P></TD>-->
-				<TD  rowspan=2 class="tr18 td3_3"><P class="p2_2222 ft19">{% if designation.nach_aufwand %}{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ currency }}{% endif %}</P></TD>
+				<TD  rowspan=2 class="tr18 td3_3"><P class="p2_2222 ft19">{% if designation.nach_aufwand %}{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}</P></TD>
 <!--				<TD  rowspan=2 class="tr18 td4_4"><P class="p10_10 ft19">{% if designation.nach_aufwand %}{% else %}{{ designation.price.rate|floatformat:2|prices_format  }}{% endif %}</P></TD>-->
 				<TD  rowspan=2 class="tr18 td4_4"><P class="p10_10 ft19">{% if designation.nach_aufwand %}{% else %}{{ designation.number_of_hours }}{% endif %}</P></TD>
 				<TD  rowspan=2 class="tr18 td5_5"><P class="p13_13 ft19">{% if designation.nach_aufwand %}nach Aufwand{% else %}{{designation.quantity}}{% endif %}</P></TD>
