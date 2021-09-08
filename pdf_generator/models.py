@@ -227,6 +227,7 @@ class Designation(BaseModel):
     number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
+    hours_to_months = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
