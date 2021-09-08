@@ -557,7 +557,7 @@ position: absolute;
 			<TD style="width:10%" class="tr10 td0"><P class="p9 ft4">POS.</P></TD>
 			<TD style="width:40%" colspan=2 class="tr10 td24"><P class="p2_xx ft4">BEZEICHNUNG</P></TD>
 			<TD style="width:10%" class="tr10 td3"><P class="p2_x ft2">&nbsp;</P></TD>
-			<TD style="width:10%" class="tr10 td4"><P class="p10_x ft5">ANZAHL H</P></TD>
+			<TD style="width:10%" class="tr10 td4"><P class="p10_x ft5">{% if phase.hours_to_months %}ANZAHL H/M.{% else %}ANZAHL H{% endif %}</P></TD>
 			<TD style="width:10%" class="tr10 td5"><P class="p11_x ft4">MENGE</P></TD>
 			<TD style="width:10%" class="tr10 td15"><P class="p2_x ft2">&nbsp;</P></TD>
 			<TD style="width:10%" class="tr10 td16"><P class="p12_x ft17">SUBTOTAL</P></TD>

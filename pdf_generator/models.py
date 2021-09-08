@@ -213,6 +213,7 @@ class Phase(BaseModel):
     page = models.ForeignKey(to=Page, related_name='phases', on_delete=models.CASCADE)
     name = models.TextField(max_length=128, null=True, blank=True, default='phase')
     number = models.PositiveSmallIntegerField(null=True, blank=True)
+    hours_to_months = models.BooleanField(default=False, verbose_name='hours to months?')
 
     def __str__(self):
         return f'{self.name}'
@@ -227,7 +228,6 @@ class Designation(BaseModel):
     number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
-    hours_to_months = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
