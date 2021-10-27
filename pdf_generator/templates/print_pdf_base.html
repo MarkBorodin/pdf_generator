@@ -248,6 +248,8 @@ position: absolute;
 	{% define offer.signature.name as name %}
 	{% define offer.signature.image_code as image_code %}
 	{% define offer.payment_information.currency as currency %}
+	{% define offer.global_texts.bottom_text as bottom_text %}
+	{% define offer.global_texts.url as global_texts_url %}
 
 {% endif %}
 
@@ -272,6 +274,8 @@ position: absolute;
 	{% define invoice.offer.signature.name as name %}
 	{% define invoice.offer.signature.image_code as image_code %}
 	{% define invoice.offer.payment_information.currency as currency %}
+	{% define invoice.global_texts.bottom_text as bottom_text %}
+	{% define invoice.global_texts.url as global_texts_url %}
 
 {% endif %}
 
@@ -297,7 +301,8 @@ position: absolute;
 	{% define offer_confirmation.offer.signature.image_code as image_code %}
 	{% define offer_confirmation.offer.payment_information.currency as currency %}
 	{% define offer_confirmation.schlusstext as schlusstext %}
-
+	{% define offer_confirmation.global_texts.bottom_text as bottom_text %}
+	{% define offer_confirmation.global_texts.url as global_texts_url %}
 {% endif %}
 
 
@@ -647,7 +652,7 @@ position: absolute;
 
 					{% block above_signature %}
 						<DIV id="id1_2_1">
-							<P class="p15 ft23">Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: <A href="https://www.marketingmonkeys.ch/agb/">https://www.marketingmonkeys.ch/agb/</A></P>
+							<P class="p15 ft23">{{ bottom_text }} <A href="{{ global_texts_url }}">{{ global_texts_url }}</A></P>
 							<P class="p16 ft6">Herzliche Grüsse</P>
 						</DIV>
 					{% endblock %}

@@ -5,6 +5,8 @@ from django.db import models
 
 SCHLUSSTEXT = """Wir bedanken uns für den Auftrag und freuen uns auf eine erfolgreiche Zusammenarbeit. 
 Bitte senden Sie dieses Dokument gegengezeichnet an uns uruck."""
+BOTTOM_TEXT = """Es gelten die Allgemeinen Geschäftsbedingungen der Marketing Monkeys. Diese findest du unter: """
+URL = """https://www.marketingmonkeys.ch/agb/"""
 
 
 class BaseModel(models.Model):
@@ -13,6 +15,20 @@ class BaseModel(models.Model):
 
     create_date = models.DateTimeField(null=True, auto_now_add=True)
     write_date = models.DateTimeField(null=True, auto_now=True)
+
+
+class GlobalTexts(BaseModel):
+    name = models.CharField(max_length=128, null=False, blank=False)
+    bottom_text = models.TextField(max_length=256, null=True, blank=True, default=BOTTOM_TEXT)
+    url = models.TextField(max_length=128, null=True, blank=True, default=URL)
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Globaler Text"
+        verbose_name_plural = "Globale Texte"
+
+    def __str__(self):
+        return self.name
 
 
 class HourlyRate(BaseModel):
@@ -81,6 +97,8 @@ class Template(BaseModel):
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
     name = models.TextField(max_length=512, null=False, unique=True)
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='templates', on_delete=models.SET_NULL) # noqa
+
 
     class Meta:
         ordering = ["-create_date"]
@@ -110,6 +128,7 @@ class Offer(BaseModel):
     description = models.TextField(max_length=512, null=True, blank=True)
     signature = models.ForeignKey(to=Signature, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
     payment_information = models.ForeignKey(to=PaymentInformation, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL) # noqa
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL) # noqa
     category = models.ForeignKey(to=Category, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
     template = models.ForeignKey(to=Template, null=True, blank=True, related_name='offers', on_delete=models.SET_NULL)
@@ -144,6 +163,7 @@ class Offer(BaseModel):
             self.payment_information = template.payment_information
             self.category = template.category
             self.bemerkung = template.bemerkung
+            self.global_texts = template.global_texts
 
             pages = Page.objects.filter(template=template.number)
 
@@ -260,6 +280,7 @@ class Invoice(BaseModel):
     sent = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
     category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='invoices', on_delete=models.SET_NULL)  # noqa
 
     class Meta:
         ordering = ["-create_date"]
@@ -289,7 +310,8 @@ class OfferConfirmation(BaseModel):
     signed = models.BooleanField(default=False)
     signed_file = models.FileField(null=True)
     category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
-    schlusstext = models.TextField(max_length=512, null=True, blank=True, default=SCHLUSSTEXT)
+    schlusstext = models.TextField(max_length=512, null=True, blank=True, default=SCHLUSSTEXT)   # noqa TODO should be deleted
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='offer_confirmations', on_delete=models.SET_NULL)  # noqa
 
     class Meta:
         ordering = ["-create_date"]

@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
 from .models import Category, Designation, Offer, Page, Phase, models, Invoice, \
-    OfferConfirmation, Signature, PaymentInformation, Template, HourlyRate
+    OfferConfirmation, Signature, PaymentInformation, Template, HourlyRate, GlobalTexts
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
@@ -52,7 +52,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'template', 'client_name', 'client_address', 'email', 'description', 'bemerkung', 'payment_information',
-        'signature', 'category'
+        'signature', 'category', 'global_texts'
     )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
@@ -107,7 +107,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'sent', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
-        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category'
+        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category', 'global_texts'
     )
     list_editable = ('sent', 'paid',)
 
@@ -160,7 +160,7 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     fields = (
         'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
         'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
-        'schlusstext'
+        'schlusstext', 'global_texts'
     )
     list_editable = ('sent', 'signed')
 
@@ -239,7 +239,7 @@ class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'name', 'client_name', 'client_address', 'email', 'description', 'bemerkung', 'payment_information',
-        'signature', 'category'
+        'signature', 'category', 'global_texts'
     )
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 170})},
@@ -254,4 +254,5 @@ admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
 admin.site.register(Template, TemplateAdmin)
+admin.site.register(GlobalTexts)
 admin.site.register(HourlyRate)

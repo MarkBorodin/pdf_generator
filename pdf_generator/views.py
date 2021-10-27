@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 from wkhtmltopdf.views import PDFTemplateView
 
-from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, OfferConfirmation
+from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, OfferConfirmation, GlobalTexts
 from pdf_generator.utils import remove_blank_page
 
 
@@ -152,7 +152,8 @@ def create_update_invoice(request, id): # noqa
             'mwst': offer.get_mwst(),
             'invoice_amount_total': offer.get_invoice_amount_total(),
             'create_date': offer.create_date,
-            'category': offer.category
+            'category': offer.category,
+            'global_texts': GlobalTexts.objects.filter(name='Rechnugen')[0]
         }
     )
 
@@ -184,7 +185,8 @@ def create_update_offer_confirmation(request, id): # noqa
             'mwst': offer.get_mwst(),
             'invoice_amount_total': offer.get_invoice_amount_total(),
             'create_date': offer.create_date,
-            'category': offer.category
+            'category': offer.category,
+            'global_texts': GlobalTexts.objects.filter(name='Auftragsbestätigung')[0]
         }
     )
 
