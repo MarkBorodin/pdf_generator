@@ -13,7 +13,7 @@ from .models import Category, Designation, Offer, Page, Phase, models, Invoice, 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
     model = Designation
-    fields = ('name', 'description', 'nach_aufwand', 'price', 'number_of_hours', 'quantity')
+    fields = ('name', 'description', 'nach_aufwand', 'price', 'fixed_price', 'number_of_hours', 'quantity')
     show_change_link = True
     extra = 0
     formfield_overrides = {

@@ -193,7 +193,8 @@ class Offer(BaseModel):
                             quantity=designation.quantity,
                             number_of_hours=designation.number_of_hours,
                             number=designation.number,
-                            nach_aufwand=designation.nach_aufwand
+                            nach_aufwand=designation.nach_aufwand,
+                            fixed_price=designation.fixed_price
                         )
                         designation_new.save()
 
@@ -204,8 +205,7 @@ class Offer(BaseModel):
         designations = Designation.objects.filter(
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=self.number))
         )
-
-        self.netto_price = sum([designation.price.rate * (designation.quantity * designation.number_of_hours) for designation in designations]) # noqa
+        self.netto_price = sum([designation.get_subtotal() for designation in designations]) # noqa
         self.netto_price = float('{:.1f}'.format(self.netto_price))
         return self.netto_price
 
@@ -244,10 +244,11 @@ class Designation(BaseModel):
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=512, null=True)
     price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_NULL, null=True, blank=True) # noqa
-    quantity = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
+    quantity = models.SmallIntegerField(null=False, blank=False, default=0)
     number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
+    fixed_price = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
@@ -258,7 +259,10 @@ class Designation(BaseModel):
         super(Designation, self).save(*args, **kwargs)
 
     def get_subtotal(self):
-        self.subtotal = self.price.rate * (self.quantity * self.number_of_hours)
+        if not self.fixed_price:
+            self.subtotal = self.price.rate * (self.quantity * self.number_of_hours)
+        else:
+            self.subtotal = self.quantity
         return self.subtotal
 
 

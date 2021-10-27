@@ -581,12 +581,15 @@ position: absolute;
 		{% for designation in phase.designations.all %}
 			<TR>
 				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
+
 				<TD colspan=2 class="tr18 td1_1"><P class="p2_222 ft20">{{ designation.name|safe }}</P></TD>
 <!--				<TD class="tr18 td2_2"><P class="p2 ft2"></P></TD>-->
+
 				<TD  rowspan=2 class="tr18 td3_3"><P class="p2_2222 ft19">{% if designation.nach_aufwand %}{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}</P></TD>
 <!--				<TD  rowspan=2 class="tr18 td4_4"><P class="p10_10 ft19">{% if designation.nach_aufwand %}{% else %}{{ designation.price.rate|floatformat:2|prices_format  }}{% endif %}</P></TD>-->
-				<TD  rowspan=2 class="tr18 td4_4"><P class="p10_10 ft19">{% if designation.nach_aufwand %}{% else %}{{ designation.number_of_hours }}{% endif %}</P></TD>
-				<TD  rowspan=2 class="tr18 td5_5"><P class="p13_13 ft19">{% if designation.nach_aufwand %}nach Aufwand{% else %}{{designation.quantity}}{% endif %}</P></TD>
+
+				<TD  rowspan=2 class="tr18 td4_4"><P class="p10_10 ft19">{% if designation.nach_aufwand or designation.fixed_price %}{% else %}{{ designation.number_of_hours }}{% endif %}</P></TD>
+				<TD  rowspan=2 class="tr18 td5_5"><P class="p13_13 ft19">{% if designation.nach_aufwand %}nach Aufwand{% elif designation.fixed_price %}{% else %}{{designation.quantity}}{% endif %}</P></TD>
 				<TD  rowspan=2 class="tr18 td15_15"><P class="p3_3 ft19">{% if designation.nach_aufwand %}{% else %}{{ currency }}{% endif %}</P></TD>
 				<TD  rowspan=2 class="tr18 td16_16"><P class="p12_12 ft19">{% if designation.nach_aufwand %}{% else %}{{ designation.get_subtotal|myround|floatformat:2|prices_format }}{% endif %}</P></TD>
 			</TR>
