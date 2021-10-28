@@ -115,17 +115,22 @@ position: absolute;
 .p5{text-align: left;padding-left: 70px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p5_555{text-align: left;padding-left: 70px;margin-top: 0px;margin-bottom: 13px;white-space: nowrap;}
 .p5_5{text-align: left;padding-left: 70px;margin-top: 5px;margin-bottom: 0px;white-space: nowrap;}
-.p5_5_5{text-align: left;padding-left: 70px;margin-top: 18px;margin-bottom: 0px;white-space: nowrap;}
+.p5_5_5{text-align: left;padding-left: 70px; margin-top: 0px; margin-bottom: 0px; white-space: nowrap;}
 .p6{text-align: left;padding-left: 19px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p6_666{text-align: left;padding-left: 19px;margin-top: 0px;margin-bottom: 13px;white-space: nowrap;}
+.p6_6666{text-align: left;padding-left: 69px;margin-top: 0px;margin-bottom: 3px;white-space: nowrap;}
 .p6_6{text-align: left;padding-left: 19px;margin-top: 10px;margin-bottom: 0px;white-space: nowrap;}
+.p6_66{text-align: left;padding-left: 30px;margin-top: 10px;margin-bottom: 0px;white-space: nowrap;}
 .p7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 15px;white-space: nowrap;}
 .p7_7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 0px;white-space: pre;}
-.p7_7_7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 15px;}
+.p7_7_7_7{text-align: left;padding-left: 5px;margin-top: 0px;margin-bottom: 0px;}
 .p8{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-.p8_8{text-align: left;padding-left: 7px;margin-top: 5px; margin-bottom: 10px;white-space: nowrap;}
+.p8_8{text-align: left;padding-left: 7px;margin-top: 1px; margin-bottom: 10px;white-space: nowrap;}
 .p8_8_8{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 7px;white-space: nowrap;}
+.p8_8_89{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 7px;}
+.p8_8_88{text-align: right;padding-right: 25px;margin-bottom: 7px;white-space: nowrap;}
+.p8_8_888{text-align: left;padding-left: 7px;margin-top: 6px;white-space: nowrap;}
 .p9{text-align: left;padding-left: 71px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p9_9{text-align: left;padding-left: 71px;margin-bottom: 0px;white-space: nowrap;}
 .p10{text-align: right;padding-right: 38px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
@@ -326,6 +331,7 @@ position: absolute;
 
 
 		<TABLE cellpadding=0 cellspacing=0 class="t0">
+<!--			   border="1">-->
 
 		{% block top %}
 
@@ -426,25 +432,25 @@ position: absolute;
 			<TD class="tr12 td1"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD rowspan=3 class="tr5 td15"><P class="p8_8_8 ft6"><NOBR>{{ kontonummer }}</NOBR></P></TD>
+			<TD rowspan=2 class="tr5 td15"><P class="p8_8_888 ft6"><NOBR>{{ kontonummer }}</NOBR></P></TD>
 			<TD class="tr12 td16"><P class="p2 ft13">&nbsp;</P></TD>
 		</TR>
 		<TR>
-			<TD colspan=2 rowspan=3 class="tr13 td13"><P class="p5_5_5 ft14">{% block Auftragsbeschreibung %}Auftragsbeschreibung{% endblock %}</P></TD>
-			<TD class="tr14 td2"><P class="p2 ft15">&nbsp;</P></TD>
+			<TD style="vertical-align: top;" colspan=2 rowspan=3 class="tr13 td13"><P class="p5_5_5 ft14">{% block Auftragsbeschreibung %}Auftragsbeschreibung{% endblock %}</P></TD>
+			<TD style="vertical-align: top;" class="tr4 td2"><P class="p7_7_7_7 ft6">{{ description }}</P></TD>
 			<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD class="tr14 td5"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD class="tr14 td16"><P class="p2 ft15">&nbsp;</P></TD>
 		</TR>
 		<TR>
-			<TD class="tr11 td2"><P class="p2 ft12">&nbsp;</P></TD>
+			<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD class="tr11 td3"><P class="p2 ft12">&nbsp;</P></TD>
 			<TD rowspan=3 class="tr5 td4"><P class="p6 ft5">IBAN</P></TD>
 			<TD class="tr11 td5"><P class="p2 ft12">&nbsp;</P></TD>
 			<TD class="tr11 td16"><P class="p2 ft12">&nbsp;</P></TD>
 		</TR>
 		<TR>
-			<TD rowspan=3 class="tr4 td2"><P class="p7_7_7_7 ft6">{{ description }}</P></TD>
+			<TD class="tr11 td3"><P class="p2 ft12">&nbsp;</P></TD>
 			<TD class="tr14 td3"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD class="tr14 td5"><P class="p2 ft15">&nbsp;</P></TD>
 			<TD colspan=2 rowspan=3 class="tr4 td6_6"><P class="p8_8 ft6">{{ iban }}</P></TD>
@@ -456,30 +462,20 @@ position: absolute;
 			<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
 		</TR>
 		<TR>
+<!--			<TD class="tr12 td0"><P class="p2 ft13">&nbsp;</P></TD>-->
+			<TD style="vertical-align: top;" colspan="2" class="tr13 td13"><P class="p6_6666 ft5">Title</P></TD>
+			<TD style="vertical-align: top;" class="tr5 td15"><P class="p8_8_89 ft6">{{title }}</P></TD>
+			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
+			<TD class="tr5 td4"><P class="p6_6 ft5">BIC/SWIFT</P></TD>
+			<TD rowspan="2" colspan="2" class="tr5 td15"><P class="p8_8_88 ft6">{{ bic_swift }}</P></TD>
+		</TR>
+			<TR>
 			<TD class="tr12 td0"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td1"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD rowspan=2 class="tr5 td4"><P class="p6_6 ft5">BIC/SWIFT</P></TD>
 			<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
 		</TR>
-		<TR>
-			<TD class="tr15 td0"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD class="tr15 td1"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD class="tr15 td2"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD class="tr15 td3"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD class="tr15 td5"><P class="p2 ft16">&nbsp;</P></TD>
-			<TD rowspan=2 class="tr5 td15"><P class="p8_8_8 ft6">{{ bic_swift }}</P></TD>
-			<TD class="tr15 td16"><P class="p2 ft16">&nbsp;</P></TD>
-		</TR>
-		<TR>
-			<TD class="tr12 td0"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td1"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td2"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td4"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td5"><P class="p2 ft13">&nbsp;</P></TD>
-			<TD class="tr12 td16"><P class="p2 ft13">&nbsp;</P></TD>
-		</TR>
+
 		{% block Rechnungsbetrag %}
 				<TR>
 				<TD class="tr6 td0"><P class="p2 ft2">&nbsp;</P></TD>
