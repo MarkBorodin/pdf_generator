@@ -579,6 +579,10 @@ position: absolute;
 		</TR>
 
 		{% for designation in phase.designations.all %}
+			{% if phase.for_loop_counter == forloop.counter %}
+				{% include "break_table.html" %}
+			{% endif %}
+
 			<TR>
 				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
 

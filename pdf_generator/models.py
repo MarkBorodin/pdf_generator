@@ -238,11 +238,33 @@ class Phase(BaseModel):
     def __str__(self):
         return f'{self.name}'
 
+    def for_loop_counter(self):
+        designations = Designation.objects.filter(phase=self)
+        designations_len = sum([len(designation.description) for designation in designations])
+        designations_count = len(designations)
+        if designations_count >= 5:
+            d_len = 0
+            d_count = 0
+            for designation in designations:
+                d_count = d_count + 1
+                d_len = d_len + len(designation.description)
+                if d_len > 1200:
+                    return d_count + 1
+                if d_count >= 5 and d_len > 800:
+                    return d_count + 2
+                if d_count >= 6 and d_len > 700:
+                    return d_count + 2
+                if d_count >= 7 and d_len > 600:
+                    return d_count + 2
+                if d_count >= 8 and d_len > 500:
+                    return d_count + 2
+            return 10
+
 
 class Designation(BaseModel):
     phase = models.ForeignKey(to=Phase, related_name='designations', on_delete=models.CASCADE)
     name = models.TextField(max_length=512, null=True)
-    description = models.TextField(max_length=512, null=True)
+    description = models.TextField(max_length=256, null=True)
     price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_NULL, null=True, blank=True) # noqa
     quantity = models.SmallIntegerField(null=False, blank=False, default=0)
     number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
