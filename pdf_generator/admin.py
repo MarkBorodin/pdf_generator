@@ -51,7 +51,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     )
     list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'template', 'client_name', 'client_address', 'email', 'description', 'bemerkung', 'payment_information',
+        'template', 'client_name', 'client_address', 'email', 'title', 'description', 'bemerkung', 'payment_information',
         'signature', 'category', 'global_texts'
     )
     formfield_overrides = {
@@ -106,8 +106,9 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
                      )
     list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'sent', 'paid', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift', 'kontonummer',
-        'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category', 'global_texts'
+        'sent', 'paid', 'client_address', 'client_name', 'email', 'title', 'description', 'iban', 'bic_swift',
+        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
+        'global_texts'
     )
     list_editable = ('sent', 'paid',)
 
@@ -158,9 +159,9 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
         'sent', 'signed', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category'
     )
     fields = (
-        'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'description', 'iban', 'bic_swift',
-        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
-        'global_texts'
+        'signed_file', 'sent', 'signed', 'client_address', 'client_name', 'email', 'title', 'description', 'iban',
+        'bic_swift', 'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total',
+        'category', 'global_texts'
     )
     list_editable = ('sent', 'signed')
 

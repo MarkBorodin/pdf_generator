@@ -43,6 +43,7 @@ def invoice_update(sender, instance, created, **kwargs):
             invoice.client_address = instance.client_address
             invoice.client_name = instance.client_name
             invoice.email = instance.email
+            invoice.title = instance.title
             invoice.description = instance.description
             invoice.iban = instance.payment_information.iban
             invoice.bic_swift = instance.payment_information.bic_swift
@@ -67,6 +68,7 @@ def offer_confirmation_update(sender, instance, created, **kwargs):
             offer_confirmation.client_address = instance.client_address
             offer_confirmation.client_name = instance.client_name
             offer_confirmation.email = instance.email
+            offer_confirmation.title = instance.title
             offer_confirmation.description = instance.description
             offer_confirmation.iban = instance.payment_information.iban
             offer_confirmation.bic_swift = instance.payment_information.bic_swift
@@ -108,6 +110,7 @@ def update_invoice_offer_confirmation(sender, instance, **kwargs):
         invoice.client_address = offer.client_address
         invoice.client_name = offer.client_name
         invoice.email = offer.email
+        invoice.title = offer.title
         invoice.description = offer.description
         invoice.iban = offer.payment_information.iban
         invoice.bic_swift = offer.payment_information.bic_swift
@@ -125,6 +128,7 @@ def update_invoice_offer_confirmation(sender, instance, **kwargs):
         offer_confirmation.client_address = offer.client_address
         offer_confirmation.client_name = offer.client_name
         offer_confirmation.email = offer.email
+        offer_confirmation.title = offer.title
         offer_confirmation.description = offer.description
         offer_confirmation.iban = offer.payment_information.iban
         offer_confirmation.bic_swift = offer.payment_information.bic_swift
