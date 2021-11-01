@@ -39,76 +39,39 @@ class GetPDF(PDFTemplateView):
         offer_confirmation = OfferConfirmation.objects.filter(offer=offer, number=offer.number).first()
         context['offer_confirmation'] = offer_confirmation
 
-        if context['number_of_pages'] == 1:
+        if 'view_pdf_invoice' in self.request.build_absolute_uri():
+            self.template_name = 'top_invoice.html'
+            self.show_content_in_browser = True
+            self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
+            context['type'] = 'invoice'
 
-            if 'view_pdf_invoice' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_invoice_one_page.html'
-                self.show_content_in_browser = True
-                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'invoice'
+        if 'get_pdf_invoice' in self.request.build_absolute_uri():
+            self.template_name = 'top_invoice.html'
+            self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
 
-            if 'get_pdf_invoice' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_invoice_one_page.html'
-                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'invoice'
+            context['type'] = 'invoice'
 
-            if 'view_pdf_confirmation' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_offer_confirmation_one_page.html'
-                self.show_content_in_browser = True
-                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'offer_confirmation'
+        if 'view_pdf_confirmation' in self.request.build_absolute_uri():
+            self.template_name = 'top_offer_confirmation.html'
+            self.show_content_in_browser = True
+            self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
+            context['type'] = 'offer_confirmation'
 
-            if 'get_pdf_confirmation' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_offer_confirmation_one_page.html'
-                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'offer_confirmation'
+        if 'get_pdf_confirmation' in self.request.build_absolute_uri():
+            self.template_name = 'top_offer_confirmation.html'
+            self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'   # noqa
+            context['type'] = 'offer_confirmation'
 
-            if 'view_pdf_offer' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_offer_one_page.html'
-                self.show_content_in_browser = True
-                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'offer'
+        if 'view_pdf_offer' in self.request.build_absolute_uri():
+            self.template_name = 'top_offer.html'
+            self.show_content_in_browser = True
+            self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
+            context['type'] = 'offer'
 
-            if 'get_pdf_offer' in self.request.build_absolute_uri():
-                self.template_name = 'print_pdf_offer_one_page.html'
-                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'offer'
-
-        elif context['number_of_pages'] > 1:
-
-            if 'view_pdf_invoice' in self.request.build_absolute_uri():
-                self.template_name = 'top_invoice.html'
-                self.show_content_in_browser = True
-                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'invoice'
-
-            if 'get_pdf_invoice' in self.request.build_absolute_uri():
-                self.template_name = 'top_invoice.html'
-                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
-
-                context['type'] = 'invoice'
-
-            if 'view_pdf_confirmation' in self.request.build_absolute_uri():
-                self.template_name = 'top_offer_confirmation.html'
-                self.show_content_in_browser = True
-                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
-                context['type'] = 'offer_confirmation'
-
-            if 'get_pdf_confirmation' in self.request.build_absolute_uri():
-                self.template_name = 'top_offer_confirmation.html'
-                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'   # noqa
-                context['type'] = 'offer_confirmation'
-
-            if 'view_pdf_offer' in self.request.build_absolute_uri():
-                self.template_name = 'top_offer.html'
-                self.show_content_in_browser = True
-                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
-                context['type'] = 'offer'
-
-            if 'get_pdf_offer' in self.request.build_absolute_uri():
-                self.template_name = 'top_offer.html'
-                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
-                context['type'] = 'offer'
+        if 'get_pdf_offer' in self.request.build_absolute_uri():
+            self.template_name = 'top_offer.html'
+            self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
+            context['type'] = 'offer'
 
         return context
 

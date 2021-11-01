@@ -235,31 +235,46 @@ class Phase(BaseModel):
     name = models.TextField(max_length=128, null=True, blank=True, default='phase')
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     hours_to_months = models.BooleanField(default=False, verbose_name='hours to months?')
+    main = models.BooleanField(default=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Phase, self).__init__(*args, **kwargs)
+        self._disable_signals = False
+
+    def save(self, *args, **kwargs):
+        if self._state.adding is True:
+            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), name=self.name)
+            unique_phase = False if phases.count() > 0 else True
+            if not unique_phase:
+                self.number = phases[0].number
+                self.main = False
+            else:
+                self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer),
+                                                       main=True).count() + 1
+        super(self.__class__, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name}'
 
     def for_loop_counter(self):
         designations = Designation.objects.filter(phase=self)
-        designations_len = sum([len(designation.description) for designation in designations])
         designations_count = len(designations)
-        if designations_count >= 5:
-            d_len = 0
-            d_count = 0
-            for designation in designations:
-                d_count = d_count + 1
-                d_len = d_len + len(designation.description)
-                if d_len > 1200:
-                    return d_count + 1
-                if d_count >= 5 and d_len > 800:
-                    return d_count + 2
-                if d_count >= 6 and d_len > 700:
-                    return d_count + 2
-                if d_count >= 7 and d_len > 600:
-                    return d_count + 2
-                if d_count >= 8 and d_len > 500:
-                    return d_count + 2
-            return 10
+        phases_on_page = len(self.page.phases.all())
+        if designations_count >= 7 and self.page.number == 1 and phases_on_page < 2:
+            return 7
+        if designations_count > 4 and self.page.number == 1 and phases_on_page >= 2 and self == self.page.phases.all().first():
+            return 6
+        if phases_on_page > 1:
+            if self == self.page.phases.all()[1] and self.page.number == 1 and phases_on_page >= 2:
+                return 11
+
+    def big_first_phase(self):
+        phases = self.page.phases.all()
+        big_first_phase = False
+        if phases:
+            big_first_phase = True if len(phases[0].designations.all()) > 4 else False
+        if len(phases) > 1 and big_first_phase:
+            return big_first_phase
 
 
 class Designation(BaseModel):
@@ -279,7 +294,22 @@ class Designation(BaseModel):
     def save(self, *args, **kwargs):
         if self.price is None:
             self.price = HourlyRate.objects.all().last()
-        super(Designation, self).save(*args, **kwargs)
+
+        if self._state.adding is True:
+            super(self.__class__, self).save(*args, **kwargs)
+            current_phase = self.phase
+            phases = Phase.objects.filter(
+                page__in=Page.objects.filter(offer=current_phase.page.offer),
+                name=current_phase.name)
+            counter = 1
+            for phase in phases:
+                for designation in phase.designations.all():
+                    designation.number = counter
+                    counter = counter + 1
+                    designation.save(update_fields=['number'])
+        else:
+            super(self.__class__, self).save(*args, **kwargs)
+
 
     def get_subtotal(self):
         if not self.fixed_price:
