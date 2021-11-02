@@ -310,7 +310,6 @@ class Designation(BaseModel):
         else:
             super(self.__class__, self).save(*args, **kwargs)
 
-
     def get_subtotal(self):
         if not self.fixed_price:
             self.subtotal = self.price.rate * (self.quantity * self.number_of_hours)

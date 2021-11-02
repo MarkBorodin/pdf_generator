@@ -586,7 +586,6 @@ position: absolute;
 		{% for designation in phase.designations.all %}
 			{% if phase.for_loop_counter == forloop.counter and page.number == 1 or forloop.counter == 18 %}
 				{% include "break_table.html" %}
-			{% elif page.phases.all|length > 1 %}
 			{% endif %}
 
 			<TR style="line-height: 50px">
@@ -621,6 +620,12 @@ position: absolute;
 				<TD class="tr19 td33"><P class="p2 ft22">&nbsp;</P></TD>
 				<TD class="tr19 td34"><P class="p2 ft22">&nbsp;</P></TD>
 			</TR>
+
+			{% if pages|length > 1 and forloop.parentloop.parentloop.last %}
+				{% if phase.designations.all|length > 6 and forloop.counter == 7 or forloop.counter == 14 %}
+					{% include "break_table.html" %}
+				{% endif %}
+			{% endif %}
 
 		{% endfor %}
 		{% endfor %}
