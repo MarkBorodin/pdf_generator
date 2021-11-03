@@ -1,7 +1,7 @@
 import datetime
 
 from django.db import models
-
+from django.utils import timezone
 
 SCHLUSSTEXT = """Wir bedanken uns für den Auftrag und freuen uns auf eine erfolgreiche Zusammenarbeit. 
 Bitte senden Sie dieses Dokument gegengezeichnet an uns uruck."""
@@ -13,8 +13,8 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-    create_date = models.DateTimeField(null=True, auto_now_add=True)
-    write_date = models.DateTimeField(null=True, auto_now=True)
+    create_date = models.DateTimeField(null=True, default=timezone.now, editable=True)
+    write_date = models.DateTimeField(null=True, auto_now=True, editable=True)
 
 
 class GlobalTexts(BaseModel):
@@ -212,12 +212,12 @@ class Offer(BaseModel):
 
     def get_mwst(self):
         self.mwst = (self.netto_price * 7.7)/100
-        self.mwst = float('{:.1f}'.format(self.mwst))
+        self.mwst = float('{:.2f}'.format(self.mwst))
         return self.mwst
 
     def get_invoice_amount_total(self):
         self.invoice_amount_total = self.get_netto_price() + self.get_mwst()
-        self.invoice_amount_total = float('{:.1f}'.format(self.invoice_amount_total))
+        self.invoice_amount_total = float('{:.2f}'.format(self.invoice_amount_total))
         return self.invoice_amount_total
 
 

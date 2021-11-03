@@ -96,11 +96,11 @@ def invoice_update(sender, instance, created, **kwargs):
             invoice.bic_swift = instance.payment_information.bic_swift
             invoice.kontonummer = instance.payment_information.kontonummer
             invoice.bemerkung = instance.bemerkung
-            invoice.zahlbar_bis = instance.create_date + timedelta(days=30)
+            # invoice.zahlbar_bis = instance.create_date + timedelta(days=30)
             invoice.netto_price = instance.get_netto_price()
             invoice.mwst = instance.get_mwst()
             invoice.invoice_amount_total = instance.get_invoice_amount_total()
-            invoice.create_date = instance.create_date
+            # invoice.create_date = instance.create_date
             invoice.category = instance.category
             invoice.save()
         except Invoice.DoesNotExist:
@@ -121,11 +121,11 @@ def offer_confirmation_update(sender, instance, created, **kwargs):
             offer_confirmation.bic_swift = instance.payment_information.bic_swift
             offer_confirmation.kontonummer = instance.payment_information.kontonummer
             offer_confirmation.bemerkung = instance.bemerkung
-            offer_confirmation.zahlbar_bis = instance.create_date + timedelta(days=30)
+            # offer_confirmation.zahlbar_bis = instance.create_date + timedelta(days=30)
             offer_confirmation.netto_price = instance.get_netto_price()
             offer_confirmation.mwst = instance.get_mwst()
             offer_confirmation.invoice_amount_total = instance.get_invoice_amount_total()
-            offer_confirmation.create_date = instance.create_date
+            # offer_confirmation.create_date = instance.create_date
             offer_confirmation.category = instance.category
             offer_confirmation.save()
         except OfferConfirmation.DoesNotExist:
@@ -163,11 +163,11 @@ def update_invoice_offer_confirmation(sender, instance, **kwargs):
         invoice.bic_swift = offer.payment_information.bic_swift
         invoice.kontonummer = offer.payment_information.kontonummer
         invoice.bemerkung = offer.bemerkung
-        invoice.zahlbar_bis = offer.create_date + timedelta(days=30)
+        # invoice.zahlbar_bis = offer.create_date + timedelta(days=30)
         invoice.netto_price = offer.get_netto_price()
         invoice.mwst = offer.get_mwst()
         invoice.invoice_amount_total = offer.get_invoice_amount_total()
-        invoice.create_date = offer.create_date
+        # invoice.create_date = offer.create_date
         invoice.category = offer.category
         invoice.save()
 
@@ -181,11 +181,11 @@ def update_invoice_offer_confirmation(sender, instance, **kwargs):
         offer_confirmation.bic_swift = offer.payment_information.bic_swift
         offer_confirmation.kontonummer = offer.payment_information.kontonummer
         offer_confirmation.bemerkung = offer.bemerkung
-        offer_confirmation.zahlbar_bis = offer.create_date + timedelta(days=30)
+        # offer_confirmation.zahlbar_bis = offer.create_date + timedelta(days=30)
         offer_confirmation.netto_price = offer.get_netto_price()
         offer_confirmation.mwst = offer.get_mwst()
         offer_confirmation.invoice_amount_total = offer.get_invoice_amount_total()
-        offer_confirmation.create_date = offer.create_date
+        # offer_confirmation.create_date = offer.create_date
         offer_confirmation.category = offer.category
         offer_confirmation.save()
     except Exception as e:

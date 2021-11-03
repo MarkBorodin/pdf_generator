@@ -694,7 +694,8 @@ position: absolute;
 					<TR>
 						<TD class="tr20 td35"><P class="p2_l ft19">MwSt. 7,7%</P></TD>
 						<TD class="tr20 td36"><P class="p2_cc ft19">{{ currency }}</P></TD>
-						<TD class="tr20 td37"><P class="p2_zz ft19">{{ mwst|myround|floatformat:2|prices_format }}</P></TD>
+<!--						<TD class="tr20 td37"><P class="p2_zz ft19">{{ mwst|myround|floatformat:2|prices_format }}</P></TD>-->
+						<TD class="tr20 td37"><P class="p2_zz ft19">{{ mwst }}</P></TD>
 					</TR>
 				</TABLE>
 
@@ -714,7 +715,8 @@ position: absolute;
 						<TD class="tr13 td38"></TD>
 						<TD class="tr13 td35"><P class="p2_22 ft19_1">Gesammttotal</P></TD>
 						<TD rowspan=2 class="tr20 td36"><P class="p2_cc ft19_1">{{ currency }}</P></TD>
-						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19_1">{{ invoice_amount_total|myround|floatformat:2|prices_format }}</P></TD>
+<!--						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19_1">{{ invoice_amount_total|myround|floatformat:2|prices_format }}</P></TD>-->
+						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19_1">{{ invoice_amount_total }}</P></TD>
 					</TR>
 					<TR>
 						<TD class="tr21 td38"></TD>

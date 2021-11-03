@@ -107,7 +107,7 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
         'sent', 'paid', 'client_address', 'client_name', 'email', 'title', 'description', 'iban', 'bic_swift',
-        'kontonummer', 'bemerkung', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
+        'kontonummer', 'bemerkung', 'create_date', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total', 'category',
         'global_texts'
     )
     list_editable = ('sent', 'paid',)
