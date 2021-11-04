@@ -1,6 +1,4 @@
-from datetime import timedelta
-
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from pdf_generator.models import Designation, Page, Phase, Offer, Invoice, OfferConfirmation, Signature
@@ -48,14 +46,24 @@ def phase_number(sender, instance, created, **kwargs):
 @skip_signal()
 def phases_number_delete(sender, instance, **kwargs):
     try:
-        phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer))
+        if instance.page.offer:
+            # if this is the offer
+            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer))
+        elif instance.page.invoice_without_offer:
+            # if this is the invoice without offer
+            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer))
         counter = 1
         for phase in phases:
             if phase.main:
                 phase.number = counter
                 counter = counter + 1
             else:
-                phase.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=phase.name)[0].number # noqa
+                if instance.page.offer:
+                    # if this is the offer
+                    phase.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=phase.name)[0].number # noqa
+                elif instance.page.invoice_without_offer:
+                    # if this is the invoice without offer
+                    phase.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=phase.name)[0].number # noqa
             phase.skip_signal = True
             phase.save()
             phase.skip_signal = False
@@ -68,9 +76,12 @@ def phases_number_delete(sender, instance, **kwargs):
 def designations_number_delete(sender, instance, **kwargs):
     try:
         current_phase = instance.phase
-        phases = Phase.objects.filter(
-            page__in=Page.objects.filter(offer=current_phase.page.offer),
-            name=current_phase.name)
+        if current_phase.page.offer:
+            # if this is the offer
+            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
+        elif current_phase.page.invoice_without_offer:
+            # if this is the invoice without offer
+            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
         counter = 1
         for phase in phases:
             for designation in phase.designations.all():

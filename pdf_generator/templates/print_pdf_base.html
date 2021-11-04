@@ -288,6 +288,35 @@ position: absolute;
 {% endif %}
 
 
+{% if type == "invoice_without_offer" %}
+
+	{% define invoice_without_offer.client_address as client_address %}
+	{% define invoice_without_offer.client_name as client_name %}
+	{% define invoice_without_offer.email as email %}
+	{% define invoice_without_offer.title as title %}
+	{% define invoice_without_offer.description as description %}
+	{% define invoice_without_offer.iban as iban %}
+	{% define invoice_without_offer.bic_swift as bic_swift %}
+	{% define invoice_without_offer.kontonummer as kontonummer %}
+	{% define invoice_without_offer.bemerkung as bemerkung %}
+	{% define invoice_without_offer.zahlbar_bis as zahlbar_bis %}
+	{% define invoice_without_offer.get_netto_price as netto_price %}
+	{% define invoice_without_offer.get_mwst as mwst %}
+	{% define invoice_without_offer.get_invoice_amount_total as invoice_amount_total %}
+	{% define invoice_without_offer.create_date as create_date %}
+	{% define invoice_without_offer.number as number %}
+	{% define invoice_without_offer.pages.all as pages %}
+
+	{% define invoice_without_offer.signature.name as name %}
+	{% define invoice_without_offer.signature.image_code as image_code %}
+	{% define invoice_without_offer.payment_information.currency as currency %}
+
+	{% define invoice_without_offer.global_texts.bottom_text as bottom_text %}
+	{% define invoice_without_offer.global_texts.url as global_texts_url %}
+
+{% endif %}
+
+
 {% if type == "offer_confirmation" %}
 
 	{% define offer_confirmation.client_address as client_address %}

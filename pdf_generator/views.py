@@ -6,7 +6,8 @@ from django.shortcuts import redirect
 
 from wkhtmltopdf.views import PDFTemplateView
 
-from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, OfferConfirmation, GlobalTexts
+from pdf_generator.models import Designation, Offer, Page, Phase, Invoice, OfferConfirmation, GlobalTexts, \
+    InvoiceWithoutOffer
 from pdf_generator.utils import remove_blank_page
 
 
@@ -22,56 +23,68 @@ class GetPDF(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        offer_number = self.kwargs['id']
-        offer = Offer.objects.get(number=offer_number)
-        context['offer'] = offer
-        context['zahlbar_bis'] = offer.create_date + timedelta(days=30)
-        context['netto_price'] = offer.get_netto_price()
-        context['mwst'] = offer.get_mwst()
-        context['invoice_amount_total'] = offer.get_invoice_amount_total()
-        context['designations'] = Designation.objects.filter(
-            phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
-        )
-        context['number_of_pages'] = Page.objects.filter(offer=offer_number).count()
-
-        invoice = Invoice.objects.filter(offer=offer, number=offer.number).first()
-        context['invoice'] = invoice
-        offer_confirmation = OfferConfirmation.objects.filter(offer=offer, number=offer.number).first()
-        context['offer_confirmation'] = offer_confirmation
-
-        if 'view_pdf_invoice' in self.request.build_absolute_uri():
+        if 'pdf_invoice_without_offer' in self.request.build_absolute_uri():
+            invoice_number = self.kwargs['id']
+            invoice_without_offer = InvoiceWithoutOffer.objects.get(number=invoice_number)
             self.template_name = 'top_invoice.html'
-            self.show_content_in_browser = True
-            self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
-            context['type'] = 'invoice'
+            self.filename = 'Rechnung' + " " + str(invoice_number) + " " + invoice_without_offer.client_name + "_" + invoice_without_offer.title + " " + str(invoice_without_offer.create_date.month) + "_" + str(invoice_without_offer.create_date.year) + '.pdf' # noqa
+            context['type'] = 'invoice_without_offer'
+            context['invoice_without_offer'] = invoice_without_offer
+            if 'view_pdf_invoice_without_offer' in self.request.build_absolute_uri():
+                self.show_content_in_browser = True
+            elif 'get_pdf_invoice_without_offer' in self.request.build_absolute_uri():
+                self.show_content_in_browser = False
+        else:
+            offer_number = self.kwargs['id']
+            offer = Offer.objects.get(number=offer_number)
+            context['offer'] = offer
+            context['zahlbar_bis'] = offer.create_date + timedelta(days=30)
+            context['netto_price'] = offer.get_netto_price()
+            context['mwst'] = offer.get_mwst()
+            context['invoice_amount_total'] = offer.get_invoice_amount_total()
+            context['designations'] = Designation.objects.filter(
+                phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=offer_number))
+            )
+            context['number_of_pages'] = Page.objects.filter(offer=offer_number).count()
 
-        if 'get_pdf_invoice' in self.request.build_absolute_uri():
-            self.template_name = 'top_invoice.html'
-            self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
+            invoice = Invoice.objects.filter(offer=offer, number=offer.number).first()
+            context['invoice'] = invoice
+            offer_confirmation = OfferConfirmation.objects.filter(offer=offer, number=offer.number).first()
+            context['offer_confirmation'] = offer_confirmation
 
-            context['type'] = 'invoice'
+            if 'view_pdf_invoice' in self.request.build_absolute_uri():
+                self.template_name = 'top_invoice.html'
+                self.show_content_in_browser = True
+                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
+                context['type'] = 'invoice'
 
-        if 'view_pdf_confirmation' in self.request.build_absolute_uri():
-            self.template_name = 'top_offer_confirmation.html'
-            self.show_content_in_browser = True
-            self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
-            context['type'] = 'offer_confirmation'
+            if 'get_pdf_invoice' in self.request.build_absolute_uri():
+                self.template_name = 'top_invoice.html'
+                self.filename = 'Rechnung' + " " + str(offer_number) + " " + invoice.client_name + "_" + invoice.title + " " + str(invoice.create_date.month) + "_" + str(invoice.create_date.year) + '.pdf'  # noqa
 
-        if 'get_pdf_confirmation' in self.request.build_absolute_uri():
-            self.template_name = 'top_offer_confirmation.html'
-            self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'   # noqa
-            context['type'] = 'offer_confirmation'
+                context['type'] = 'invoice'
 
-        if 'view_pdf_offer' in self.request.build_absolute_uri():
-            self.template_name = 'top_offer.html'
-            self.show_content_in_browser = True
-            self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
-            context['type'] = 'offer'
+            if 'view_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer_confirmation.html'
+                self.show_content_in_browser = True
+                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'  # noqa
+                context['type'] = 'offer_confirmation'
 
-        if 'get_pdf_offer' in self.request.build_absolute_uri():
-            self.template_name = 'top_offer.html'
-            self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
-            context['type'] = 'offer'
+            if 'get_pdf_confirmation' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer_confirmation.html'
+                self.filename = self.filename = 'Auftragsbestätigung' + " " + str(offer_number) + " " + offer_confirmation.client_name + "_" + offer_confirmation.title + " " + str(offer_confirmation.create_date.month) + "_" + str(offer_confirmation.create_date.year) + '.pdf'   # noqa
+                context['type'] = 'offer_confirmation'
+
+            if 'view_pdf_offer' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer.html'
+                self.show_content_in_browser = True
+                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
+                context['type'] = 'offer'
+
+            if 'get_pdf_offer' in self.request.build_absolute_uri():
+                self.template_name = 'top_offer.html'
+                self.filename = 'Offerte' + " " + str(offer_number) + " " + offer.client_name + "_" + offer.title + " " + str(offer.create_date.month) + "_" + str(offer.create_date.year) + '.pdf'   # noqa
+                context['type'] = 'offer'
 
         return context
 

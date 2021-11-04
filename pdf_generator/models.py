@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 import datetime
 
 from django.db import models
 from django.utils import timezone
+
 
 SCHLUSSTEXT = """Wir bedanken uns für den Auftrag und freuen uns auf eine erfolgreiche Zusammenarbeit. 
 Bitte senden Sie dieses Dokument gegengezeichnet an uns uruck."""
@@ -98,7 +101,6 @@ class Template(BaseModel):
     price = models.IntegerField(null=True, blank=True)
     name = models.TextField(max_length=512, null=False, unique=True)
     global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='templates', on_delete=models.SET_NULL) # noqa
-
 
     class Meta:
         ordering = ["-create_date"]
@@ -211,7 +213,7 @@ class Offer(BaseModel):
         return self.netto_price
 
     def get_mwst(self):
-        self.mwst = (self.netto_price * 7.7)/100
+        self.mwst = (self.get_netto_price() * 7.7)/100
         self.mwst = float('{:.2f}'.format(self.mwst))
         return self.mwst
 
@@ -221,9 +223,137 @@ class Offer(BaseModel):
         return self.invoice_amount_total
 
 
+class Invoice(BaseModel):
+    offer = models.OneToOneField(to=Offer, related_name='invoice', on_delete=models.CASCADE, null=True)
+    number = models.IntegerField(primary_key=True)
+    client_address = models.TextField(max_length=512, null=True)
+    client_name = models.TextField(max_length=128, null=True)
+    email = models.EmailField(null=True)
+    title = models.TextField(max_length=256, null=True, blank=True)
+    description = models.TextField(max_length=512, null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    zahlbar_bis = models.DateTimeField(null=True)
+    netto_price = models.IntegerField(null=True)
+    mwst = models.IntegerField(null=True)
+    invoice_amount_total = models.IntegerField(null=True)
+    sent = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
+    category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='invoices', on_delete=models.SET_NULL)  # noqa
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Rechnung"
+        verbose_name_plural = "Rechnugen"
+
+    def __str__(self):
+        return f'{self.number}'
+
+
+class InvoiceWithoutOffer(BaseModel):
+    number = models.IntegerField(primary_key=True)
+    client_address = models.TextField(max_length=512, null=True)
+    client_name = models.TextField(max_length=128, null=True)
+    email = models.EmailField(null=True)
+    title = models.TextField(max_length=256, null=True, blank=True)
+    description = models.TextField(max_length=512, null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    zahlbar_bis = models.DateTimeField(null=True, blank=True)
+    netto_price = models.IntegerField(null=True, blank=True)
+    mwst = models.IntegerField(null=True, blank=True)
+    invoice_amount_total = models.IntegerField(null=True, blank=True)
+    sent = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
+    category = models.ForeignKey(to=Category, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)   # noqa
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)  # noqa
+    signature = models.ForeignKey(to=Signature, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)    # noqa
+    payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='invoices_without_offer', on_delete=models.SET_NULL) # noqa
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Rechnung ohne Offerte"
+        verbose_name_plural = "Rechnungen ohne Offerten"
+
+    def save(self, *args, **kwargs):
+        if self.number is None:
+            self.number = \
+                str(datetime.datetime.now().year)\
+                + str(datetime.datetime.now().month)\
+                + str(datetime.datetime.now().hour)\
+                + str(datetime.datetime.now().minute) \
+                + str(datetime.datetime.now().second)
+            if len(self.number) > 9:
+                self.number = self.number[2:]
+                if len(self.number) == 8:
+                    self.number = self.number + '0'
+            self.zahlbar_bis = self.create_date + timedelta(days=30)
+
+        super(self.__class__, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.number}'
+
+    def get_netto_price(self):
+        designations = Designation.objects.filter(
+            phase__in=Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.number))
+        )
+        self.netto_price = sum([designation.get_subtotal() for designation in designations]) # noqa
+        self.netto_price = float('{:.1f}'.format(self.netto_price))
+        return self.netto_price
+
+    def get_mwst(self):
+        self.mwst = (self.get_netto_price() * 7.7)/100
+        self.mwst = float('{:.2f}'.format(self.mwst))
+        return self.mwst
+
+    def get_invoice_amount_total(self):
+        self.invoice_amount_total = self.get_netto_price() + self.get_mwst()
+        self.invoice_amount_total = float('{:.2f}'.format(self.invoice_amount_total))
+        return self.invoice_amount_total
+
+
+class OfferConfirmation(BaseModel):
+    offer = models.OneToOneField(to=Offer, related_name='offer_confirmation', on_delete=models.CASCADE)
+    number = models.IntegerField(primary_key=True)
+    client_address = models.TextField(max_length=512, null=True)
+    client_name = models.TextField(max_length=128, null=True)
+    email = models.EmailField(null=True)
+    title = models.TextField(max_length=256, null=True, blank=True)
+    description = models.TextField(max_length=512, null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    bemerkung = models.TextField(max_length=512, null=True, blank=True)
+    zahlbar_bis = models.DateTimeField(null=True)
+    netto_price = models.IntegerField(null=True)
+    mwst = models.IntegerField(null=True)
+    invoice_amount_total = models.IntegerField(null=True)
+    sent = models.BooleanField(default=False)
+    signed = models.BooleanField(default=False)
+    signed_file = models.FileField(null=True)
+    category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
+    schlusstext = models.TextField(max_length=512, null=True, blank=True, default=SCHLUSSTEXT)   # noqa TODO should be deleted
+    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='offer_confirmations', on_delete=models.SET_NULL)  # noqa
+
+    class Meta:
+        ordering = ["-create_date"]
+        verbose_name = "Auftragsbestätigung"
+        verbose_name_plural = "Auftragsbestätigungen"
+
+    def __str__(self):
+        return f'{self.number}'
+
+
 class Page(BaseModel):
     offer = models.ForeignKey(to=Offer, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
     template = models.ForeignKey(to=Template, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
+    invoice_without_offer = models.ForeignKey(to=InvoiceWithoutOffer, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)  # noqa
     number = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
 
     def __str__(self):
@@ -243,14 +373,24 @@ class Phase(BaseModel):
 
     def save(self, *args, **kwargs):
         if self._state.adding is True:
-            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), name=self.name)
+
+            # if this is the offer
+            if self.page.offer:
+                phases = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), name=self.name)
+            # if this is the invoice without offer
+            elif self.page.invoice_without_offer:
+                phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), name=self.name)
+
             unique_phase = False if phases.count() > 0 else True
             if not unique_phase:
                 self.number = phases[0].number
                 self.main = False
             else:
-                self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer),
-                                                       main=True).count() + 1
+                # if this is the offer
+                self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), main=True).count() + 1
+                # if this is the invoice without offer
+                self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
+
         super(self.__class__, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -298,9 +438,12 @@ class Designation(BaseModel):
         if self._state.adding is True:
             super(self.__class__, self).save(*args, **kwargs)
             current_phase = self.phase
-            phases = Phase.objects.filter(
-                page__in=Page.objects.filter(offer=current_phase.page.offer),
-                name=current_phase.name)
+            if current_phase.page.offer:
+                # if this is the offer
+                phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
+            elif current_phase.page.invoice_without_offer:
+                # if this is the invoice without offer
+                phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
             counter = 1
             for phase in phases:
                 for designation in phase.designations.all():
@@ -316,65 +459,3 @@ class Designation(BaseModel):
         else:
             self.subtotal = self.quantity
         return self.subtotal
-
-
-class Invoice(BaseModel):
-    offer = models.OneToOneField(to=Offer, related_name='invoice', on_delete=models.CASCADE)
-    number = models.IntegerField(primary_key=True)
-    client_address = models.TextField(max_length=512, null=True)
-    client_name = models.TextField(max_length=128, null=True)
-    email = models.EmailField(null=True)
-    title = models.TextField(max_length=256, null=True, blank=True)
-    description = models.TextField(max_length=512, null=True)
-    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
-    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
-    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
-    bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    zahlbar_bis = models.DateTimeField(null=True)
-    netto_price = models.IntegerField(null=True)
-    mwst = models.IntegerField(null=True)
-    invoice_amount_total = models.IntegerField(null=True)
-    sent = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
-    category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
-    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='invoices', on_delete=models.SET_NULL)  # noqa
-
-    class Meta:
-        ordering = ["-create_date"]
-        verbose_name = "Rechnung"
-        verbose_name_plural = "Rechnugen"
-
-    def __str__(self):
-        return f'{self.number}'
-
-
-class OfferConfirmation(BaseModel):
-    offer = models.OneToOneField(to=Offer, related_name='offer_confirmation', on_delete=models.CASCADE)
-    number = models.IntegerField(primary_key=True)
-    client_address = models.TextField(max_length=512, null=True)
-    client_name = models.TextField(max_length=128, null=True)
-    email = models.EmailField(null=True)
-    title = models.TextField(max_length=256, null=True, blank=True)
-    description = models.TextField(max_length=512, null=True)
-    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
-    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
-    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
-    bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    zahlbar_bis = models.DateTimeField(null=True)
-    netto_price = models.IntegerField(null=True)
-    mwst = models.IntegerField(null=True)
-    invoice_amount_total = models.IntegerField(null=True)
-    sent = models.BooleanField(default=False)
-    signed = models.BooleanField(default=False)
-    signed_file = models.FileField(null=True)
-    category = models.ForeignKey(to=Category, null=True, related_name='offer_confirmations', on_delete=models.SET_NULL)
-    schlusstext = models.TextField(max_length=512, null=True, blank=True, default=SCHLUSSTEXT)   # noqa TODO should be deleted
-    global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='offer_confirmations', on_delete=models.SET_NULL)  # noqa
-
-    class Meta:
-        ordering = ["-create_date"]
-        verbose_name = "Auftragsbestätigung"
-        verbose_name_plural = "Auftragsbestätigungen"
-
-    def __str__(self):
-        return f'{self.number}'

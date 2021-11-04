@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from nested_admin.nested import NestedTabularInline
 
 from .models import Category, Designation, Offer, Page, Phase, models, Invoice, \
-    OfferConfirmation, Signature, PaymentInformation, Template, HourlyRate, GlobalTexts
+    OfferConfirmation, Signature, PaymentInformation, Template, HourlyRate, GlobalTexts, InvoiceWithoutOffer
 
 
 class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): # noqa
@@ -35,7 +35,8 @@ class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
     model = Page
     inlines = [PhaseInline]
     extra = 0
-    readonly_fields = ('offer', 'template')
+    fields = ('number',)
+    readonly_fields = ('offer', 'template', 'invoice_without_offer')
 
 
 class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
@@ -93,7 +94,6 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
             f'href="{reverse("pdf_generator:create_offer_confirmation", args=[obj.pk])}">Create offer confirmation</a>'
         )
 
-
 class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Invoice
     list_display = (
@@ -118,9 +118,18 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
     def get_sum_open_sent_paid():
         sum_open_sent_paid = dict()
         invoices = Invoice.objects.all() # noqa
-        sum_open_sent_paid['sum_open_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if not invoice.sent and not invoice.paid]) # noqa
-        sum_open_sent_paid['sum_sent_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent and not invoice.paid]) # noqa
-        sum_open_sent_paid['sum_paid_invoices'] = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid]) # noqa
+        invoices_without_offers = InvoiceWithoutOffer.objects.all() # noqa
+        sum_open_invoices = sum([invoice.invoice_amount_total for invoice in invoices if not invoice.sent and not invoice.paid]) # noqa
+        sum_sent_invoices = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent and not invoice.paid]) # noqa
+        sum_paid_invoices = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid]) # noqa
+
+        sum_open_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if not invoice.sent and not invoice.paid])  # noqa
+        sum_sent_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.sent and not invoice.paid])  # noqa
+        sum_paid_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.paid])  # noqa
+
+        sum_open_sent_paid['sum_open_invoices'] = sum_open_invoices + sum_open_without_offers
+        sum_open_sent_paid['sum_sent_invoices'] = sum_sent_invoices + sum_sent_without_offers
+        sum_open_sent_paid['sum_paid_invoices'] = sum_paid_invoices + sum_paid_without_offers
         return sum_open_sent_paid
 
     def changelist_view(self, request, extra_context=None): # noqa
@@ -142,6 +151,70 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
         return mark_safe(
             f'<a target="_blank" class="button" '
             f'href="{reverse("pdf_generator:view_pdf_invoice", args=[obj.pk])}">View PDF invoice</a>'
+        )
+
+
+class InvoiceWithoutOfferAdmin(nested_admin.NestedModelAdmin):  # noqa
+    inlines = [PageInline]
+    model = InvoiceWithoutOffer
+    list_display = (
+        'number', 'zahlbar_bis', 'client_name', 'view_invoice_amount_total', 'category',
+        'sent', 'paid',
+        'view_pdf_invoice_without_offer', 'get_pdf_invoice_without_offer'
+    )
+    search_fields = (
+        'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
+        'sent', 'paid', 'category__name'
+                     )
+    list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
+    fields = (
+        'sent', 'paid', 'client_address', 'client_name', 'email', 'title', 'description', 'iban', 'bic_swift',
+        'kontonummer', 'bemerkung', 'create_date', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total',
+        'category', 'global_texts', 'signature', 'payment_information'
+    )
+    list_editable = ('sent', 'paid',)
+
+    change_list_template = 'admin/pdf_generator/invoice/change_list.html'
+
+    @staticmethod
+    def get_sum_open_sent_paid():
+        sum_open_sent_paid = dict()
+        invoices = Invoice.objects.all()  # noqa
+        invoices_without_offers = InvoiceWithoutOffer.objects.all()  # noqa
+        sum_open_invoices = sum([invoice.invoice_amount_total for invoice in invoices if not invoice.sent and not invoice.paid])  # noqa
+        sum_sent_invoices = sum([invoice.invoice_amount_total for invoice in invoices if invoice.sent and not invoice.paid])  # noqa
+        sum_paid_invoices = sum([invoice.invoice_amount_total for invoice in invoices if invoice.paid])  # noqa
+        sum_open_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if not invoice.sent and not invoice.paid])  # noqa
+        sum_sent_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.sent and not invoice.paid])  # noqa
+        sum_paid_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.paid])  # noqa
+
+        sum_open_sent_paid['sum_open_invoices'] = sum_open_invoices + sum_open_without_offers
+        sum_open_sent_paid['sum_sent_invoices'] = sum_sent_invoices + sum_sent_without_offers
+        sum_open_sent_paid['sum_paid_invoices'] = sum_paid_invoices + sum_paid_without_offers
+        return sum_open_sent_paid
+
+    def view_invoice_amount_total(self, obj):
+        return math.floor(obj.get_invoice_amount_total())
+
+    def changelist_view(self, request, extra_context=None): # noqa
+        sum_open_sent_paid = self.get_sum_open_sent_paid()
+        my_context = {
+            'open': sum_open_sent_paid['sum_open_invoices'],
+            'sent': sum_open_sent_paid['sum_sent_invoices'],
+            'paid': sum_open_sent_paid['sum_paid_invoices'],
+        }
+        return super(InvoiceWithoutOfferAdmin, self).changelist_view(request, extra_context=my_context)
+
+    def view_pdf_invoice_without_offer(self, obj): # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button"'
+            f'href="{reverse("pdf_generator:view_pdf_invoice_without_offer", args=[obj.pk])}">View PDF invoice</a>'
+        )
+
+    def get_pdf_invoice_without_offer(self, obj): # noqa
+        return mark_safe(
+            f'<a target="_blank" class="button" style="background: green;"'
+            f'href="{reverse("pdf_generator:get_pdf_invoice_without_offer", args=[obj.pk])}">Get PDF invoice</a>'
         )
 
 
@@ -253,6 +326,7 @@ admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
+admin.site.register(InvoiceWithoutOffer, InvoiceWithoutOfferAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
 admin.site.register(Template, TemplateAdmin)
 admin.site.register(GlobalTexts)
