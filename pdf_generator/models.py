@@ -402,8 +402,11 @@ class Phase(BaseModel):
         designations = Designation.objects.filter(phase=self)
         designations_count = len(designations)
         phases_on_page = len(self.page.phases.all())
-        if designations_count >= 7 and self.page.number == 1 and phases_on_page < 2:
-            return 7
+        if designations_count >= 3 and self.page.number == 1 and phases_on_page < 2:
+            if designations_count >= 7:
+                return 7
+            elif designations_count < 7:
+                return 5
         if designations_count > 4 and self.page.number == 1 and phases_on_page >= 2 and self == self.page.phases.all().first():
             return 6
         if phases_on_page > 1:

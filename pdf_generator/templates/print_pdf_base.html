@@ -616,8 +616,6 @@ position: absolute;
 		{% for designation in phase.designations.all %}
 			{% if phase.for_loop_counter == forloop.counter and page.number == 1 or forloop.counter == 18 %}
 				{% include "break_table.html" %}
-			{% elif forloop.counter == 5 and pages|length == 1 %}
-				{% include "break_table.html" %}
 			{% endif %}
 
 			<TR style="line-height: 50px">
