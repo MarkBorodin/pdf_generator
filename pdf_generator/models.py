@@ -209,7 +209,7 @@ class Offer(BaseModel):
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(offer=self.number))
         )
         self.netto_price = sum([designation.get_subtotal() for designation in designations]) # noqa
-        self.netto_price = float('{:.1f}'.format(self.netto_price))
+        self.netto_price = float('{:.2f}'.format(self.netto_price))
         return self.netto_price
 
     def get_mwst(self):
@@ -238,7 +238,7 @@ class Invoice(BaseModel):
     zahlbar_bis = models.DateTimeField(null=True)
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
-    invoice_amount_total = models.IntegerField(null=True)
+    invoice_amount_total = models.FloatField(null=True)
     sent = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
     category = models.ForeignKey(to=Category, null=True, related_name='invoices', on_delete=models.SET_NULL)
@@ -247,7 +247,7 @@ class Invoice(BaseModel):
     class Meta:
         ordering = ["-create_date"]
         verbose_name = "Rechnung"
-        verbose_name_plural = "Rechnugen"
+        verbose_name_plural = "Rechnungen"
 
     def __str__(self):
         return f'{self.number}'
@@ -267,7 +267,7 @@ class InvoiceWithoutOffer(BaseModel):
     zahlbar_bis = models.DateTimeField(null=True, blank=True)
     netto_price = models.IntegerField(null=True, blank=True)
     mwst = models.IntegerField(null=True, blank=True)
-    invoice_amount_total = models.IntegerField(null=True, blank=True)
+    invoice_amount_total = models.FloatField(null=True, blank=True)
     sent = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
     category = models.ForeignKey(to=Category, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)   # noqa
@@ -304,7 +304,7 @@ class InvoiceWithoutOffer(BaseModel):
             phase__in=Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.number))
         )
         self.netto_price = sum([designation.get_subtotal() for designation in designations]) # noqa
-        self.netto_price = float('{:.1f}'.format(self.netto_price))
+        self.netto_price = float('{:.2f}'.format(self.netto_price))
         return self.netto_price
 
     def get_mwst(self):
@@ -333,7 +333,7 @@ class OfferConfirmation(BaseModel):
     zahlbar_bis = models.DateTimeField(null=True)
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
-    invoice_amount_total = models.IntegerField(null=True)
+    invoice_amount_total = models.FloatField(null=True)
     sent = models.BooleanField(default=False)
     signed = models.BooleanField(default=False)
     signed_file = models.FileField(null=True)
@@ -387,9 +387,11 @@ class Phase(BaseModel):
                 self.main = False
             else:
                 # if this is the offer
-                self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), main=True).count() + 1
+                if self.page.offer:
+                    self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), main=True).count() + 1
                 # if this is the invoice without offer
-                self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
+                elif self.page.invoice_without_offer:
+                    self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
 
         super(self.__class__, self).save(*args, **kwargs)
 
@@ -421,15 +423,18 @@ class Designation(BaseModel):
     phase = models.ForeignKey(to=Phase, related_name='designations', on_delete=models.CASCADE)
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=256, null=True)
-    price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_NULL, null=True, blank=True) # noqa
-    quantity = models.SmallIntegerField(null=False, blank=False, default=0)
-    number_of_hours = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
+    price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_DEFAULT, default=HourlyRate.objects.all().first(), null=True, blank=True) # noqa
+    quantity = models.SmallIntegerField(null=False, blank=False, default=1)
+    number_of_hours = models.FloatField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
     fixed_price = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_default_hourly_rate(self):
+        return HourlyRate.objects.all().first()
 
     def save(self, *args, **kwargs):
         if self.price is None:

@@ -139,6 +139,7 @@ position: absolute;
 .p10_10{text-align: center;padding-right: 38px;margin-bottom: 0px;white-space: nowrap;}
 .p11{text-align: center;padding-right: 37px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p11_x{text-align: center;padding-right: 37px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p11_xx{text-align: center;padding-right: 37px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p12{text-align: right;padding-right: 48px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p12_x{text-align: center;padding-right: 48px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p12_12{text-align: center;padding-right: 48px;white-space: nowrap;}
@@ -493,7 +494,7 @@ position: absolute;
 		</TR>
 		<TR>
 <!--			<TD class="tr12 td0"><P class="p2 ft13">&nbsp;</P></TD>-->
-			<TD style="vertical-align: top;" colspan="2" class="tr13 td13"><P class="p6_6666 ft5">Title</P></TD>
+			<TD style="vertical-align: top;" colspan="2" class="tr13 td13"><P class="p6_6666 ft5">Titel</P></TD>
 			<TD style="vertical-align: top;" class="tr5 td15"><P class="p8_8_89 ft6">{{title }}</P></TD>
 			<TD class="tr12 td3"><P class="p2 ft13">&nbsp;</P></TD>
 			<TD class="tr5 td4"><P class="p6_6 ft5">BIC/SWIFT</P></TD>
@@ -614,6 +615,8 @@ position: absolute;
 
 		{% for designation in phase.designations.all %}
 			{% if phase.for_loop_counter == forloop.counter and page.number == 1 or forloop.counter == 18 %}
+				{% include "break_table.html" %}
+			{% elif forloop.counter == 5 and pages|length == 1 %}
 				{% include "break_table.html" %}
 			{% endif %}
 
@@ -742,7 +745,7 @@ position: absolute;
 
 					<TR>
 						<TD class="tr13 td38"></TD>
-						<TD class="tr13 td35"><P class="p2_22 ft19_1">Gesammttotal</P></TD>
+						<TD class="tr13 td35"><P class="p2_22 ft19_1">Gesamttotal</P></TD>
 						<TD rowspan=2 class="tr20 td36"><P class="p2_cc ft19_1">{{ currency }}</P></TD>
 <!--						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19_1">{{ invoice_amount_total|myround|floatformat:2|prices_format }}</P></TD>-->
 						<TD rowspan=2 class="tr20 td37"><P class="p2_z ft19_1">{{ invoice_amount_total }}</P></TD>

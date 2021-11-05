@@ -67,7 +67,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
             return []
 
     def amount_total(self, obj):  # noqa
-        amount_total = math.floor(obj.get_invoice_amount_total())
+        amount_total = obj.get_invoice_amount_total()
         return amount_total
 
     def get_pdf_offer(self, obj): # noqa
@@ -127,9 +127,9 @@ class InvoiceAdmin(nested_admin.NestedModelAdmin):  # noqa
         sum_sent_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.sent and not invoice.paid])  # noqa
         sum_paid_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.paid])  # noqa
 
-        sum_open_sent_paid['sum_open_invoices'] = sum_open_invoices + sum_open_without_offers
-        sum_open_sent_paid['sum_sent_invoices'] = sum_sent_invoices + sum_sent_without_offers
-        sum_open_sent_paid['sum_paid_invoices'] = sum_paid_invoices + sum_paid_without_offers
+        sum_open_sent_paid['sum_open_invoices'] = float('{:.2f}'.format(sum_open_invoices + sum_open_without_offers))
+        sum_open_sent_paid['sum_sent_invoices'] = float('{:.2f}'.format(sum_sent_invoices + sum_sent_without_offers))
+        sum_open_sent_paid['sum_paid_invoices'] = float('{:.2f}'.format(sum_paid_invoices + sum_paid_without_offers))
         return sum_open_sent_paid
 
     def changelist_view(self, request, extra_context=None): # noqa
@@ -188,13 +188,13 @@ class InvoiceWithoutOfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         sum_sent_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.sent and not invoice.paid])  # noqa
         sum_paid_without_offers = sum([invoice.get_invoice_amount_total() for invoice in invoices_without_offers if invoice.paid])  # noqa
 
-        sum_open_sent_paid['sum_open_invoices'] = sum_open_invoices + sum_open_without_offers
-        sum_open_sent_paid['sum_sent_invoices'] = sum_sent_invoices + sum_sent_without_offers
-        sum_open_sent_paid['sum_paid_invoices'] = sum_paid_invoices + sum_paid_without_offers
+        sum_open_sent_paid['sum_open_invoices'] = float('{:.2f}'.format(sum_open_invoices + sum_open_without_offers))
+        sum_open_sent_paid['sum_sent_invoices'] = float('{:.2f}'.format(sum_sent_invoices + sum_sent_without_offers))
+        sum_open_sent_paid['sum_paid_invoices'] = float('{:.2f}'.format(sum_paid_invoices + sum_paid_without_offers))
         return sum_open_sent_paid
 
     def view_invoice_amount_total(self, obj):
-        return math.floor(obj.get_invoice_amount_total())
+        return obj.get_invoice_amount_total()
 
     def changelist_view(self, request, extra_context=None): # noqa
         sum_open_sent_paid = self.get_sum_open_sent_paid()
@@ -321,6 +321,28 @@ class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
     }
 
 
+class GlobalTextsAdmin(nested_admin.NestedModelAdmin):  # noqa
+    model = GlobalTexts
+    list_display = ('name',)
+    search_fields = ('name',)
+    list_filter = ('name',)
+    fields = ('name', 'bottom_text', 'url')
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
+
+
+class HourlyRateAdmin(nested_admin.NestedModelAdmin):  # noqa
+    model = HourlyRate
+    list_display = ('rate', 'name')
+    search_fields = ('name', 'rate')
+    list_filter = ('name', 'rate')
+    fields = ('rate', 'name')
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 170})},
+    }
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
@@ -329,5 +351,5 @@ admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(InvoiceWithoutOffer, InvoiceWithoutOfferAdmin)
 admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
 admin.site.register(Template, TemplateAdmin)
-admin.site.register(GlobalTexts)
-admin.site.register(HourlyRate)
+admin.site.register(GlobalTexts, GlobalTextsAdmin)
+admin.site.register(HourlyRate, HourlyRateAdmin)

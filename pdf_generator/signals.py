@@ -26,17 +26,35 @@ def get_code_from_image(sender, instance, created, **kwargs):
         obj.save()
 
 
+@receiver(post_delete, sender=Page)
+@skip_signal()
+def phase_number_with_page_deleting(sender, instance, **kwargs):
+    for phase in instance.phases.all():
+        phase.save()
+
+
 @receiver(post_save, sender=Phase)
 @skip_signal()
 def phase_number(sender, instance, created, **kwargs):
     if created is False:
-        phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=instance.name)
+        # if this is the offer
+        if instance.page.offer:
+            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=instance.name)
+        # if this is the invoice without offer
+        elif instance.page.invoice_without_offer:
+            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=instance.name) # noqa
+
         unique_phase = False if phases.count() > 1 else True
         if not unique_phase:
             instance.number = phases[0].number
             instance.main = False
         else:
-            instance.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), main=True).count() # noqa
+            # if this is the offer
+            if instance.page.offer:
+                instance.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), main=True).count() # noqa
+            # if this is the invoice without offer
+            elif instance.page.invoice_without_offer:
+                instance.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), main=True).count() # noqa
         instance.skip_signal = True
         instance.save()
         instance.skip_signal = False
