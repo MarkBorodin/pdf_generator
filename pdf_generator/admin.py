@@ -41,6 +41,7 @@ class PageInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
 
 class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Offer
+    save_as = True
     inlines = [PageInline]
     list_display = (
         'number', 'create_date', 'client_name', 'amount_total', 'category',
@@ -50,7 +51,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
         'category__name'
     )
-    list_filter = ('create_date', 'client_address', 'client_name', 'email', 'description', 'category')
+    list_filter = ('create_date', 'category')
     fields = (
         'template', 'client_name', 'client_address', 'email', 'title', 'description', 'bemerkung', 'payment_information',
         'signature', 'category', 'global_texts'
