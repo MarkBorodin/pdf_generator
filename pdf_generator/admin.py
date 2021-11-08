@@ -44,7 +44,7 @@ class OfferAdmin(nested_admin.NestedModelAdmin):  # noqa
     save_as = True
     inlines = [PageInline]
     list_display = (
-        'number', 'create_date', 'client_name', 'amount_total', 'category',
+        'number', 'create_date', 'title', 'client_name', 'amount_total', 'category',
         'view_pdf_offer', 'get_pdf_offer', 'create_invoice', 'create_offer_confirmation'
     )
     search_fields = (
