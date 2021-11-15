@@ -131,7 +131,7 @@ def create_update_invoice(request, id): # noqa
             'invoice_amount_total': offer.get_invoice_amount_total(),
             'create_date': offer.create_date,
             'category': offer.category,
-            'global_texts': GlobalTexts.objects.filter(name='Rechnugen')[0]
+            'global_texts': GlobalTexts.objects.filter(name='Rechnungen')[0]
         }
     )
 
