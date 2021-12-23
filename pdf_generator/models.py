@@ -380,7 +380,9 @@ class Phase(BaseModel):
             # if this is the invoice without offer
             elif self.page.invoice_without_offer:
                 phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), name=self.name)
-
+            # if this is the template
+            elif self.page.template:
+                phases = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), name=self.name)
             unique_phase = False if phases.count() > 0 else True
             if not unique_phase:
                 self.number = phases[0].number
@@ -392,6 +394,9 @@ class Phase(BaseModel):
                 # if this is the invoice without offer
                 elif self.page.invoice_without_offer:
                     self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
+                # if this is the template
+                elif self.page.template:
+                    self.number = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), main=True).count() + 1
 
         super(self.__class__, self).save(*args, **kwargs)
 
@@ -427,6 +432,7 @@ class Designation(BaseModel):
     name = models.TextField(max_length=512, null=True)
     description = models.TextField(max_length=256, null=True, blank=True)
     price = models.ForeignKey(to=HourlyRate, related_name='designations', on_delete=models.SET_DEFAULT, default=HourlyRate.objects.all().first().pk, null=True, blank=True) # noqa
+    # price = models.IntegerField(null=True, blank=True) # noqa
     quantity = models.SmallIntegerField(null=False, blank=False, default=1)
     number_of_hours = models.FloatField(null=False, blank=False, default=0)
     number = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -452,6 +458,9 @@ class Designation(BaseModel):
             elif current_phase.page.invoice_without_offer:
                 # if this is the invoice without offer
                 phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
+            elif current_phase.page.template:
+                # if this is the template
+                phases = Phase.objects.filter(page__in=Page.objects.filter(template=current_phase.page.template), name=current_phase.name)
             counter = 1
             for phase in phases:
                 for designation in phase.designations.all():
