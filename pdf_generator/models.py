@@ -452,6 +452,10 @@ class Phase(BaseModel):
     def __str__(self):
         return f'{self.name}'
 
+    def designations_price_sum(self):
+        a = sum(designation.get_subtotal() for designation in Designation.objects.filter(phase=self))
+        return a
+
     def for_loop_counter(self):
         designations = Designation.objects.filter(phase=self)
         designations_count = len(designations)
