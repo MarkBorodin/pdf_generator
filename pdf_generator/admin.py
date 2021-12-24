@@ -169,13 +169,19 @@ class InvoiceWithoutOfferAdmin(nested_admin.NestedModelAdmin):  # noqa
                      )
     list_filter = ('sent', 'paid', 'create_date', 'client_address', 'client_name', 'email', 'description', 'category')
     fields = (
-        'sent', 'paid', 'client_address', 'client_name', 'email', 'title', 'description', 'iban', 'bic_swift',
+        'template', 'sent', 'paid', 'client_address', 'client_name', 'email', 'title', 'description', 'iban', 'bic_swift',
         'kontonummer', 'bemerkung', 'create_date', 'zahlbar_bis', 'netto_price', 'mwst', 'invoice_amount_total',
         'category', 'global_texts', 'signature', 'payment_information'
     )
     list_editable = ('sent', 'paid',)
 
     change_list_template = 'admin/pdf_generator/invoice/change_list.html'
+
+    def get_readonly_fields(self, request, obj=None): # noqa
+        if obj:
+            return 'template'
+        else:
+            return []
 
     @staticmethod
     def get_sum_open_sent_paid():

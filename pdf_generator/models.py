@@ -15,9 +15,11 @@ URL = """https://www.marketingmonkeys.ch/agb/"""
 class BaseModel(models.Model):
     class Meta:
         abstract = True
-
+    # test = models.TextField()
     create_date = models.DateTimeField(null=True, default=timezone.now, editable=True)
+    # create_date = models.DateField(null=True, blank=True, default=datetime.date.today, editable=True)
     write_date = models.DateTimeField(null=True, auto_now=True, editable=True)
+    # write_date = models.DateField(null=True, blank=True, default=datetime.date.today, editable=True)
 
 
 class GlobalTexts(BaseModel):
@@ -255,14 +257,14 @@ class Invoice(BaseModel):
 
 class InvoiceWithoutOffer(BaseModel):
     number = models.IntegerField(primary_key=True)
-    client_address = models.TextField(max_length=512, null=True)
-    client_name = models.TextField(max_length=128, null=True)
-    email = models.EmailField(null=True)
+    client_address = models.TextField(max_length=512, null=True, blank=True)
+    client_name = models.TextField(max_length=128, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     title = models.TextField(max_length=256, null=True, blank=True)
     description = models.TextField(max_length=512, null=True, blank=True)
-    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True)
-    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
-    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
+    iban = models.TextField(max_length=32, default='CH26 0483 5216 7077 3100 0', null=True, blank=True)
+    bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True, blank=True)
+    kontonummer = models.TextField(max_length=32, default='2167077-32', null=True, blank=True)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
     zahlbar_bis = models.DateTimeField(null=True, blank=True)
     netto_price = models.IntegerField(null=True, blank=True)
@@ -273,7 +275,8 @@ class InvoiceWithoutOffer(BaseModel):
     category = models.ForeignKey(to=Category, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)   # noqa
     global_texts = models.ForeignKey(to=GlobalTexts, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)  # noqa
     signature = models.ForeignKey(to=Signature, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)    # noqa
-    payment_information = models.ForeignKey(to=PaymentInformation, null=True, related_name='invoices_without_offer', on_delete=models.SET_NULL) # noqa
+    payment_information = models.ForeignKey(to=PaymentInformation, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL) # noqa
+    template = models.ForeignKey(to=Template, null=True, blank=True, related_name='invoices_without_offer', on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["-create_date"]
@@ -294,6 +297,52 @@ class InvoiceWithoutOffer(BaseModel):
                     self.number = self.number + '0'
             self.zahlbar_bis = self.create_date + timedelta(days=30)
 
+        if self.template is not None:
+            template = Template.objects.get(name=self.template.name)
+            self.client_address = template.client_address
+            self.client_name = template.client_name
+            self.email = template.email
+            self.description = template.description
+            self.signature = template.signature
+            self.payment_information = template.payment_information
+            self.category = template.category
+            self.bemerkung = template.bemerkung
+            self.global_texts = template.global_texts
+
+            pages = Page.objects.filter(template=template.number)
+
+            for page in pages:
+                page_new = Page.objects.create(
+                    invoice_without_offer=self,
+                    number=page.number
+                )
+                page_new.save()
+                phases = Phase.objects.filter(page=page.id)
+
+                for phase in phases:
+                    phase_new = Phase.objects.create(
+                        page=page_new,
+                        name=phase.name,
+                        number=phase.number
+                    )
+                    phase_new.save()
+                    designations = Designation.objects.filter(phase=phase.id)
+
+                    for designation in designations:
+                        designation_new = Designation.objects.create(
+                            phase=phase_new,
+                            name=designation.name,
+                            description=designation.description,
+                            price=designation.price,
+                            quantity=designation.quantity,
+                            number_of_hours=designation.number_of_hours,
+                            number=designation.number,
+                            nach_aufwand=designation.nach_aufwand,
+                            fixed_price=designation.fixed_price
+                        )
+                        designation_new.save()
+
+        self.template = None
         super(self.__class__, self).save(*args, **kwargs)
 
     def __str__(self):
