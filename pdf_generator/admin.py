@@ -174,8 +174,8 @@ class InvoiceWithoutOfferAdmin(nested_admin.NestedModelAdmin):  # noqa
         'category', 'global_texts', 'signature', 'payment_information'
     )
     list_editable = ('sent', 'paid',)
-
     change_list_template = 'admin/pdf_generator/invoice/change_list.html'
+    save_as = True
 
     def get_readonly_fields(self, request, obj=None): # noqa
         if obj:
