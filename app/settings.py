@@ -132,6 +132,7 @@ WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
 
 SE_L10N = False
 es_formats.DATETIME_FORMAT = 'd. m. Y'
+es_formats.DATE_FORMAT = 'd. m. Y'
 
 LOGGING = {
     'version': 1,
