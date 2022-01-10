@@ -15,11 +15,12 @@ URL = """https://www.marketingmonkeys.ch/agb/"""
 class BaseModel(models.Model):
     class Meta:
         abstract = True
-    # test = models.TextField()
-    create_date = models.DateTimeField(null=True, default=timezone.now, editable=True)
-    # create_date = models.DateField(null=True, blank=True, default=datetime.date.today, editable=True)
-    write_date = models.DateTimeField(null=True, auto_now=True, editable=True)
-    # write_date = models.DateField(null=True, blank=True, default=datetime.date.today, editable=True)
+    # create_date = models.DateTimeField(null=True, default=timezone.now, editable=True)
+    create_date = models.DateField(null=True, default=datetime.date.today, editable=True)
+    # create_date = models.TextField(null=True, blank=True)
+    # write_date = models.DateTimeField(null=True, auto_now=True, editable=True)
+    write_date = models.DateField(null=True, auto_now=True, editable=True)
+    # write_date = models.TextField(null=True, blank=True)
 
 
 class GlobalTexts(BaseModel):
@@ -237,7 +238,9 @@ class Invoice(BaseModel):
     bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
     kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    zahlbar_bis = models.DateTimeField(null=True)
+    # zahlbar_bis = models.DateTimeField(null=True)
+    # zahlbar_bis = models.TextField(null=True, blank=True)
+    zahlbar_bis = models.DateField(null=True, blank=True)
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.FloatField(null=True)
@@ -266,7 +269,9 @@ class InvoiceWithoutOffer(BaseModel):
     bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True, blank=True)
     kontonummer = models.TextField(max_length=32, default='2167077-32', null=True, blank=True)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    zahlbar_bis = models.DateTimeField(null=True, blank=True)
+    # zahlbar_bis = models.DateTimeField(null=True, blank=True)
+    # zahlbar_bis = models.TextField(null=True, blank=True)
+    zahlbar_bis = models.DateField(null=True, blank=True)
     netto_price = models.IntegerField(null=True, blank=True)
     mwst = models.IntegerField(null=True, blank=True)
     invoice_amount_total = models.FloatField(null=True, blank=True)
@@ -379,7 +384,9 @@ class OfferConfirmation(BaseModel):
     bic_swift = models.TextField(max_length=32, default='CRESCHZZ80A', null=True)
     kontonummer = models.TextField(max_length=32, default='2167077-32', null=True)
     bemerkung = models.TextField(max_length=512, null=True, blank=True)
-    zahlbar_bis = models.DateTimeField(null=True)
+    # zahlbar_bis = models.DateTimeField(null=True)
+    # zahlbar_bis = models.TextField(null=True, blank=True)
+    zahlbar_bis = models.DateField(null=True, blank=True)
     netto_price = models.IntegerField(null=True)
     mwst = models.IntegerField(null=True)
     invoice_amount_total = models.FloatField(null=True)
