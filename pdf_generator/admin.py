@@ -311,7 +311,7 @@ class TemplateAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = Template
     inlines = [PageInline]
     list_display = (
-        'name', 'number', 'create_date', 'client_name', 'category',
+        'name', 'number', 'create_date', 'client_name', 'category', 'global_texts'
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
