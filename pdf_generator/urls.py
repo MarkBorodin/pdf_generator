@@ -21,8 +21,17 @@ urlpatterns = [
     path('view_pdf_invoice_without_offer/<int:id>', GetPDF.as_view(), name='view_pdf_invoice_without_offer'),
     path('get_pdf_invoice_without_offer/<int:id>', GetPDF.as_view(), name='get_pdf_invoice_without_offer'),
 
-    # order_confirmation
+    # offer_confirmation
     path('get_pdf_confirmation/<int:id>', GetPDF.as_view(), name='get_pdf_confirmation'),
     path('view_pdf_confirmation/<int:id>', GetPDF.as_view(), name='view_pdf_confirmation'),
     path('view_signed_file/<int:id>', view_signed_file, name='view_signed_file'),
+    # TODO
+    # path('create_part_invoice/<int:id>', create_part_invoice, name='create_part_invoice'),
+    # TODO
+
+    # TODO
+    # # partial_invoice
+    # path('view_pdf_partial_invoice/<int:id>', GetPDF.as_view(), name='view_pdf_partial_invoice'),
+    # path('get_pdf_partial_invoice/<int:id>', GetPDF.as_view(), name='get_pdf_partial_invoice'),
+    # TODO
 ]

@@ -406,6 +406,18 @@ class OfferConfirmation(BaseModel):
         return f'{self.number}'
 
 
+# TODO
+# class PartialInvoice(BaseModel):
+#     offer_confirmation = models.ForeignKey(to=OfferConfirmation, related_name='partial_invoices', on_delete=models.CASCADE)
+#     number = models.SmallIntegerField(null=True, blank=True)
+#
+#     def save(self, *args, **kwargs):
+#         if not self.number:
+#             self.number = PartialInvoice.objects.filter(offer_confirmation=self.offer_confirmation).count() + 1
+#         super(self.__class__, self).save(*args, **kwargs)
+# TODO
+
+
 class Page(BaseModel):
     offer = models.ForeignKey(to=Offer, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
     template = models.ForeignKey(to=Template, related_name='pages', on_delete=models.CASCADE, null=True, blank=True)
@@ -498,6 +510,10 @@ class Designation(BaseModel):
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     nach_aufwand = models.BooleanField(default=False)
     fixed_price = models.BooleanField(default=False)
+    # TODO
+    # invoiced = models.BooleanField(default=False)
+    # partial_invoice = models.ForeignKey(to=PartialInvoice, related_name='designations', null=True, blank=True, on_delete=models.SET_NULL)
+    # TODO
 
     def __str__(self):
         return f'{self.name}'

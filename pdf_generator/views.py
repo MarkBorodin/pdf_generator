@@ -183,3 +183,19 @@ def view_signed_file(request, id): # noqa
     except Exception: # noqa
         response = HttpResponseNotFound('<h1>File not exist</h1>')
         return response
+
+
+# TODO
+# def create_part_invoice(request, id): # noqa
+#     partial_invoice = PartialInvoice.objects.create(offer_confirmation=id)
+#     partial_invoice.save()
+#     ...
+#     designations_list = []   # here will be list of designations which will be invoiced
+#     offer_confirmation = OfferConfirmation.objects.get(id=id)
+#     for page in offer_confirmation.offer.pages.all():
+#         for phase in page.phases.all():
+#             for designation in phase.designations.all():
+#                 if designation.id in designations_list:
+#                     designation.invoiced = True
+#                     designation.partial_invoice = partial_invoice.id
+# TODO

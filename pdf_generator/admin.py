@@ -229,7 +229,11 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
     model = OfferConfirmation
     list_display = (
         'number', 'zahlbar_bis', 'client_name', 'invoice_amount_total', 'category',
-        'sent', 'signed', 'view_pdf_offer_confirmation', 'get_pdf_offer_confirmation', 'view_signed_file',
+        'sent', 'signed', 'view_pdf_offer_confirmation',
+        # TODO
+        # 'create_part_invoice',
+        # TODO
+        'get_pdf_offer_confirmation', 'view_signed_file',
     )
     search_fields = (
         'number', 'create_date', 'client_address', 'client_name', 'client_address', 'email', 'description',
@@ -251,6 +255,15 @@ class OfferConfirmationAdmin(nested_admin.NestedModelAdmin):  # noqa
             f'href="{reverse("pdf_generator:view_pdf_confirmation", args=[obj.pk])}">'
             f'View PDF offer confirmation</a>'
         )
+
+    # TODO
+    # def create_part_invoice(self, obj): # noqa
+    #     return mark_safe(
+    #         f'<a target="_blank" class="button" style="background: yellow;"'
+    #         f'href="{reverse("pdf_generator:create_part_invoice", args=[obj.pk])}">'
+    #         f'Create Part-invoice</a>'
+    #     )
+    # TODO
 
     def get_pdf_offer_confirmation(self, obj):  # noqa
         return mark_safe(
@@ -350,6 +363,30 @@ class HourlyRateAdmin(nested_admin.NestedModelAdmin):  # noqa
     }
 
 
+# TODO
+# class PartialInvoiceAdmin(nested_admin.NestedModelAdmin):   # noqa
+#     model = PartialInvoice
+#     list_display = ('offer_confirmation', 'number', 'view_pdf_partial_invoice', 'get_pdf_partial_invoice',)
+#     search_fields = ('offer_confirmation', 'number')
+#     list_filter = ('offer_confirmation', 'number')
+#     fields = ()
+#
+#     def view_pdf_partial_invoice(self, obj): # noqa
+#         return mark_safe(
+#             f'<a target="_blank" class="button" '
+#             f'href="{reverse("pdf_generator:view_pdf_partial_invoice", args=[obj.pk])}">'
+#             f'View PDF partial invoice</a>'
+#         )
+#
+#     def get_pdf_partial_invoice(self, obj):  # noqa
+#         return mark_safe(
+#             f'<a target="_blank" class="button" style="background: green;"'
+#             f'href="{reverse("pdf_generator:get_pdf_partial_invoice", args=[obj.pk])}">'
+#             f'Get PDF partial invoice</a>'
+#         )
+# TODO
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(PaymentInformation, PaymentInformationAdmin)
 admin.site.register(Signature, SignatureAdmin)
@@ -360,3 +397,4 @@ admin.site.register(OfferConfirmation, OfferConfirmationAdmin)
 admin.site.register(Template, TemplateAdmin)
 admin.site.register(GlobalTexts, GlobalTextsAdmin)
 admin.site.register(HourlyRate, HourlyRateAdmin)
+# admin.site.register(PartialInvoice, PartialInvoiceAdmin)
