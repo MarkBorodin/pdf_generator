@@ -23,7 +23,7 @@ class DesignationInline(NestedTabularInline, nested_admin.NestedStackedInline): 
 
 class PhaseInline(NestedTabularInline, nested_admin.NestedStackedInline):  # noqa
     model = Phase
-    fields = ('name', 'hours_to_months')
+    fields = ('name', 'hours_to_months', 'page_break')
     inlines = [DesignationInline]
     extra = 0
     formfield_overrides = {

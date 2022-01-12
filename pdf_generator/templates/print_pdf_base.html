@@ -550,7 +550,6 @@ position: absolute;
 
 		{% for phase in page.phases.all %}
 
-
 		<TABLE
 				cellpadding=0
 				cellspacing=0
@@ -566,9 +565,10 @@ position: absolute;
 		<col width="50" valign="top">
 		<col width="40" valign="top">
 
-		{% if page.number == 1 and forloop.counter == 2 and phase.big_first_phase %}
-			<div style="page-break-after: always;"></div>
-		{% endif %}
+<!--			!!!-->
+<!--		{% if page.number == 1 and forloop.counter == 2 and phase.big_first_phase %}-->
+<!--			<div style="page-break-after: always;"></div>-->
+<!--		{% endif %}-->
 
 		{% if page.phases.all|length > 1 or pages|length > 1 %}
 
@@ -621,12 +621,12 @@ position: absolute;
 		</TR>
 
 		{% for designation in phase.designations.all %}
-			{% if phase.for_loop_counter == forloop.counter and page.number == 1 or forloop.counter == 18 %}
-				{% include "break_table.html" %}
-			{% endif %}
-
-			<TR style="line-height: 50px">
-				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>
+<!--			{% if phase.for_loop_counter == forloop.counter and page.number == 1 or forloop.counter == 18 %}-->
+<!--				{% include "break_table.html" %}-->
+<!--			{% endif %}-->
+			<TR style="line-height: 50px;">
+<!--				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ phase.number }}.{{ designation.number }}</P></TD>-->
+				<TD rowspan=2 class="tr18 td0_0"><P class="p9_9 ft19">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</P></TD>
 				<TD colspan=2 class="tr18 td1_1"><P class="p2_222 ft20_1">{{ designation.name|safe }}</P><P class="ft21">{{ designation.description }}</P></TD>
 <!--				<TD class="tr18 td2_2"><P class="p2 ft2"></P></TD>-->
 
@@ -664,12 +664,11 @@ position: absolute;
 			</TR>
 			{% endif %}
 
-
-			{% if pages|length > 1 and forloop.parentloop.parentloop.last %}
-				{% if phase.designations.all|length > 6 and forloop.counter == 7 or forloop.counter == 14 %}
-					{% include "break_table.html" %}
-				{% endif %}
-			{% endif %}
+<!--			{% if pages|length > 1 and forloop.parentloop.parentloop.last %}-->
+<!--				{% if phase.designations.all|length > 6 and forloop.counter == 7 or forloop.counter == 14 %}-->
+<!--					{% include "break_table.html" %}-->
+<!--				{% endif %}-->
+<!--			{% endif %}-->
 
 
 			{% if page.phases.all|length > 1 and forloop.last or pages|length > 1 and forloop.last %}
@@ -704,10 +703,11 @@ position: absolute;
 
 			{% endif %}
 
-
 		{% endfor %}
 
-
+			{% if phase.page_break %}
+				<div style="page-break-after: always;"></div>
+			{% endif %}
 
 		{% endfor %}
 

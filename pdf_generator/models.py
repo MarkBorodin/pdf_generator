@@ -434,39 +434,40 @@ class Phase(BaseModel):
     number = models.PositiveSmallIntegerField(null=True, blank=True)
     hours_to_months = models.BooleanField(default=False, verbose_name='hours to months?')
     main = models.BooleanField(default=True)
+    page_break = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs):
         super(Phase, self).__init__(*args, **kwargs)
         self._disable_signals = False
 
-    def save(self, *args, **kwargs):
-        if self._state.adding is True:
-
-            # if this is the offer
-            if self.page.offer:
-                phases = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), name=self.name)
-            # if this is the invoice without offer
-            elif self.page.invoice_without_offer:
-                phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), name=self.name)
-            # if this is the template
-            elif self.page.template:
-                phases = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), name=self.name)
-            unique_phase = False if phases.count() > 0 else True
-            if not unique_phase:
-                self.number = phases[0].number
-                self.main = False
-            else:
-                # if this is the offer
-                if self.page.offer:
-                    self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), main=True).count() + 1
-                # if this is the invoice without offer
-                elif self.page.invoice_without_offer:
-                    self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
-                # if this is the template
-                elif self.page.template:
-                    self.number = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), main=True).count() + 1
-
-        super(self.__class__, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self._state.adding is True:
+    #
+    #         # if this is the offer
+    #         if self.page.offer:
+    #             phases = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), name=self.name)
+    #         # if this is the invoice without offer
+    #         elif self.page.invoice_without_offer:
+    #             phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), name=self.name)
+    #         # if this is the template
+    #         elif self.page.template:
+    #             phases = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), name=self.name)
+    #         unique_phase = False if phases.count() > 0 else True
+    #         if not unique_phase:
+    #             self.number = phases[0].number
+    #             self.main = False
+    #         else:
+    #             # if this is the offer
+    #             if self.page.offer:
+    #                 self.number = Phase.objects.filter(page__in=Page.objects.filter(offer=self.page.offer), main=True).count() + 1
+    #             # if this is the invoice without offer
+    #             elif self.page.invoice_without_offer:
+    #                 self.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=self.page.invoice_without_offer), main=True).count() + 1
+    #             # if this is the template
+    #             elif self.page.template:
+    #                 self.number = Phase.objects.filter(page__in=Page.objects.filter(template=self.page.template), main=True).count() + 1
+    #
+    #     super(self.__class__, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name}'
@@ -525,26 +526,26 @@ class Designation(BaseModel):
         if self.price is None:
             self.price = HourlyRate.objects.all().last()
 
-        if self._state.adding is True:
-            super(self.__class__, self).save(*args, **kwargs)
-            current_phase = self.phase
-            if current_phase.page.offer:
-                # if this is the offer
-                phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
-            elif current_phase.page.invoice_without_offer:
-                # if this is the invoice without offer
-                phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
-            elif current_phase.page.template:
-                # if this is the template
-                phases = Phase.objects.filter(page__in=Page.objects.filter(template=current_phase.page.template), name=current_phase.name)
-            counter = 1
-            for phase in phases:
-                for designation in phase.designations.all():
-                    designation.number = counter
-                    counter = counter + 1
-                    designation.save(update_fields=['number'])
-        else:
-            super(self.__class__, self).save(*args, **kwargs)
+        # if self._state.adding is True:
+        #     super(self.__class__, self).save(*args, **kwargs)
+        #     current_phase = self.phase
+        #     if current_phase.page.offer:
+        #         # if this is the offer
+        #         phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
+        #     elif current_phase.page.invoice_without_offer:
+        #         # if this is the invoice without offer
+        #         phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
+        #     elif current_phase.page.template:
+        #         # if this is the template
+        #         phases = Phase.objects.filter(page__in=Page.objects.filter(template=current_phase.page.template), name=current_phase.name)
+        #     counter = 1
+        #     for phase in phases:
+        #         for designation in phase.designations.all():
+        #             designation.number = counter
+        #             counter = counter + 1
+        #             designation.save(update_fields=['number'])
+        # else:
+        super(self.__class__, self).save(*args, **kwargs)
 
     def get_subtotal(self):
         if not self.fixed_price:

@@ -26,106 +26,128 @@ def get_code_from_image(sender, instance, created, **kwargs):
         obj.save()
 
 
-@receiver(post_delete, sender=Page)
-@skip_signal()
-def phase_number_with_page_deleting(sender, instance, **kwargs):
-    for phase in instance.phases.all():
-        phase.save()
+# TODO
+# @receiver(post_save, sender=Phase)
+# def phase_number(sender, instance, created, **kwargs):
+#     if created:
+#         phases_num = Phase.objects.filter(
+#             page__in=Page.objects.filter(offer=instance.page.offer)
+#         ).count()
+#         instance.number = phases_num
+#         instance.save()
+#
+#
+# @receiver(post_save, sender=Designation)
+# def designations_number(sender, instance, created, **kwargs):
+#     if created:
+#         designations_num = Designation.objects.filter(
+#             phase=instance.phase
+#         ).count()
+#         instance.number = designations_num
+#         instance.save()
+# TODO
 
-
-@receiver(post_save, sender=Phase)
-@skip_signal()
-def phase_number(sender, instance, created, **kwargs):
-    if created is False:
-        # if this is the offer
-        if instance.page.offer:
-            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=instance.name)
-        # if this is the invoice without offer
-        elif instance.page.invoice_without_offer:
-            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=instance.name) # noqa
-            # if this is the template
-        elif instance.page.template:
-            phases = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template),
-                                          name=instance.name)
-
-        unique_phase = False if phases.count() > 1 else True
-        if not unique_phase:
-            instance.number = phases[0].number
-            instance.main = False
-        else:
-            # if this is the offer
-            if instance.page.offer:
-                instance.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), main=True).count() # noqa
-            # if this is the invoice without offer
-            elif instance.page.invoice_without_offer:
-                instance.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), main=True).count() # noqa
-            # if this is the template
-            if instance.page.template:
-                instance.number = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template),
-                                                       main=True).count()  # noqa
-        instance.skip_signal = True
-        instance.save()
-        instance.skip_signal = False
-
-
-@receiver(post_delete, sender=Phase)
-@skip_signal()
-def phases_number_delete(sender, instance, **kwargs):
-    try:
-        if instance.page.offer:
-            # if this is the offer
-            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer))
-        elif instance.page.invoice_without_offer:
-            # if this is the invoice without offer
-            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer))
-        elif instance.page.template:
-            # if this is the template
-            phases = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template))
-        counter = 1
-        for phase in phases:
-            if phase.main:
-                phase.number = counter
-                counter = counter + 1
-            else:
-                if instance.page.offer:
-                    # if this is the offer
-                    phase.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=phase.name)[0].number # noqa
-                elif instance.page.invoice_without_offer:
-                    # if this is the invoice without offer
-                    phase.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=phase.name)[0].number # noqa
-                elif instance.page.template:
-                    # if this is the template
-                    phase.number = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template), name=phase.name)[0].number # noqa
-            phase.skip_signal = True
-            phase.save()
-            phase.skip_signal = False
-    except Exception as e:
-        with open('log.txt', 'w') as f:
-            f.write(str(e))
-
-
-@receiver(post_delete, sender=Designation)
-def designations_number_delete(sender, instance, **kwargs):
-    try:
-        current_phase = instance.phase
-        if current_phase.page.offer:
-            # if this is the offer
-            phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
-        elif current_phase.page.invoice_without_offer:
-            # if this is the invoice without offer
-            phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
-        elif current_phase.page.template:
-            # if this is the template
-            phases = Phase.objects.filter(page__in=Page.objects.filter(template=current_phase.page.template), name=current_phase.name)
-        counter = 1
-        for phase in phases:
-            for designation in phase.designations.all():
-                designation.number = counter
-                designation.save()
-                counter = counter + 1
-    except Exception as e:
-        with open('log.txt', 'w') as f:
-            f.write(str(e))
+#
+# @receiver(post_delete, sender=Page)
+# @skip_signal()
+# def phase_number_with_page_deleting(sender, instance, **kwargs):
+#     for phase in instance.phases.all():
+#         phase.save()
+#
+#
+# @receiver(post_save, sender=Phase)
+# @skip_signal()
+# def phase_number(sender, instance, created, **kwargs):
+#     if created is False:
+#         # if this is the offer
+#         if instance.page.offer:
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=instance.name)
+#         # if this is the invoice without offer
+#         elif instance.page.invoice_without_offer:
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=instance.name) # noqa
+#             # if this is the template
+#         elif instance.page.template:
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template),
+#                                           name=instance.name)
+#
+#         unique_phase = False if phases.count() > 1 else True
+#         if not unique_phase:
+#             instance.number = phases[0].number
+#             instance.main = False
+#         else:
+#             # if this is the offer
+#             if instance.page.offer:
+#                 instance.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), main=True).count() # noqa
+#             # if this is the invoice without offer
+#             elif instance.page.invoice_without_offer:
+#                 instance.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), main=True).count() # noqa
+#             # if this is the template
+#             if instance.page.template:
+#                 instance.number = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template),
+#                                                        main=True).count()  # noqa
+#         instance.skip_signal = True
+#         instance.save()
+#         instance.skip_signal = False
+#
+#
+# @receiver(post_delete, sender=Phase)
+# @skip_signal()
+# def phases_number_delete(sender, instance, **kwargs):
+#     try:
+#         if instance.page.offer:
+#             # if this is the offer
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer))
+#         elif instance.page.invoice_without_offer:
+#             # if this is the invoice without offer
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer))
+#         elif instance.page.template:
+#             # if this is the template
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template))
+#         counter = 1
+#         for phase in phases:
+#             if phase.main:
+#                 phase.number = counter
+#                 counter = counter + 1
+#             else:
+#                 if instance.page.offer:
+#                     # if this is the offer
+#                     phase.number = Phase.objects.filter(page__in=Page.objects.filter(offer=instance.page.offer), name=phase.name)[0].number # noqa
+#                 elif instance.page.invoice_without_offer:
+#                     # if this is the invoice without offer
+#                     phase.number = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=instance.page.invoice_without_offer), name=phase.name)[0].number # noqa
+#                 elif instance.page.template:
+#                     # if this is the template
+#                     phase.number = Phase.objects.filter(page__in=Page.objects.filter(template=instance.page.template), name=phase.name)[0].number # noqa
+#             phase.skip_signal = True
+#             phase.save()
+#             phase.skip_signal = False
+#     except Exception as e:
+#         with open('log.txt', 'w') as f:
+#             f.write(str(e))
+#
+#
+# @receiver(post_delete, sender=Designation)
+# def designations_number_delete(sender, instance, **kwargs):
+#     try:
+#         current_phase = instance.phase
+#         if current_phase.page.offer:
+#             # if this is the offer
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(offer=current_phase.page.offer), name=current_phase.name)
+#         elif current_phase.page.invoice_without_offer:
+#             # if this is the invoice without offer
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(invoice_without_offer=current_phase.page.invoice_without_offer), name=current_phase.name)
+#         elif current_phase.page.template:
+#             # if this is the template
+#             phases = Phase.objects.filter(page__in=Page.objects.filter(template=current_phase.page.template), name=current_phase.name)
+#         counter = 1
+#         for phase in phases:
+#             for designation in phase.designations.all():
+#                 designation.number = counter
+#                 designation.save()
+#                 counter = counter + 1
+#     except Exception as e:
+#         with open('log.txt', 'w') as f:
+#             f.write(str(e))
 
 
 @receiver(post_save, sender=Offer)
